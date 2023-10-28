@@ -1,6 +1,6 @@
 0. The commands should be run in the docker.
 1. add_ids.py to the loops.csv file. The id is the last field.
-2. prepare_data.py creates inputs and outputs direcotry and puts data in apropriate direcotry for each program.
+2. prepare_data.py creates inputs and outputs direcotry and puts data in apropriate direcotry for each program. Characters other than () are changed to '.'.
 
 3. run_rnasfbinv.py runs command 
 python3 /RNAsfbinv/RNAfbinvCL.py -f infile 1> outfile 2> errfile
