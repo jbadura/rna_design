@@ -1,0 +1,19 @@
+import os
+import sys
+import subprocess
+
+indir = 'inputs/rnasfbinv'
+outdir = 'outputs/rnasfbinv'
+
+for fn in os.listdir(indir):
+    print(fn)
+    tmp = fn.split('.')[0]
+    outfile = open(f'{outdir}/{tmp}.out', 'w')
+    errfile = open(f'{outdir}/{tmp}.err', 'w')
+
+    command = ['python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{fn}']
+    subprocess.run(command, stdout=outfile, stderr=errfile)
+    
+    outfile.close()
+    errfile.close()
+
