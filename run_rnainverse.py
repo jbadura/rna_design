@@ -2,20 +2,22 @@ import os
 import sys
 import subprocess
 
-indir = 'inputs/rnainverse'
-outdir = 'outputs/rnainverse'
+for ver in ['rnainverse', 'rnainverse_extended']:
 
-for fn in os.listdir(indir):
-    print(fn)
-    tmp = fn.split('.')[0]
-    outfile = open(f'{outdir}/{tmp}.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.err', 'w')
+    indir = f'inputs/{ver}'
+    outdir = f'outputs/{ver}'
 
-    infile = open(f'{indir}/{fn}', 'r')
+    for fn in os.listdir(indir):
+        print(fn)
+        tmp = fn.split('.')[0]
+        outfile = open(f'{outdir}/{tmp}.out', 'w')
+        errfile = open(f'{outdir}/{tmp}.err', 'w')
 
-    command = ['RNAinverse']
-    subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
-    
-    infile.close()
-    outfile.close()
-    errfile.close()
+        infile = open(f'{indir}/{fn}', 'r')
+
+        command = ['RNAinverse']
+        subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
+        
+        infile.close()
+        outfile.close()
+        errfile.close()

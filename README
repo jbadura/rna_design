@@ -1,0 +1,33 @@
+1. add_ids.py to the loops.csv file. The id is the last field.
+2. prepare_data.py creates inputs and outputs direcotry and puts data in apropriate direcotry for each program.
+
+3. run_rnasfbinv.py runs command 
+python3 /RNAsfbinv/RNAfbinvCL.py -f infile 1> outfile 2> errfile
+for each file in inputs/rnasfbinv and saves the results in outputs/rnasfbinv 
+Example infile
+TARGET_STRUCTURE=(.....(((((((((.....(((((.(....).)))))......))))))))).........)
+TARGET_SEQUENCE=NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+
+
+4. run_rnainverse.py runs command
+RNAinverse < infile 1> outfile 2> errfile
+for each file in inputs/rnainverse and saves the results in outputs/rnainverse 
+Example infile
+(.....(((((((((.....(((((.(....).)))))......))))))))).........)
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+
+
+5. run_sedirna.py runs command
+python3 /DesiRNA/DesiRNA.py -f' infile -t 10 1> outfile 2> errfile
+for each file in inputs/desirna and saves the results in outputs/desirna 
+Example infile
+>name
+name_6
+>seq_restr
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+>sec_struct
+(.....(((((((((.....(((((.(....).)))))......))))))))).........)
+
+6. run_rnaredprint.py runs command
+/RNARedPrint/_inst/bin/RNARedPrint --num 1 seq 1> outfile 2> errfile
+where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/rnaredprint

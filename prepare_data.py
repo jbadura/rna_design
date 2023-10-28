@@ -18,6 +18,9 @@ for s in ['inputs', 'outputs']:
     mkdir(f'{s}/rnasfbinv/')
     mkdir(f'{s}/rnasfbinv_extended/')
 
+mkdir(f'outputs/rnaredprint/')
+mkdir(f'outputs/rnaredprint/')
+
 
 def remove_junk(s):
     res = []
@@ -39,6 +42,9 @@ for l in f:
     if name == 'Source': continue
     ID = int(l[-1])
     
+    if ID > 30:
+        break
+    
     fragment_structure = l[6]
     fragment_structure_mod = remove_junk(fragment_structure)
     NNN = 'N' * len(fragment_structure)
@@ -50,7 +56,7 @@ for l in f:
     if len(fragment_structure_ext) > 100:
         continue
     
-    ##### RNA inverse #####
+    ##### RNA inverse (also used for RNARedPrint #####
     f = open(f'inputs/rnainverse/{ID}.in', 'w')
     f.write(f'{fragment_structure_mod}\n')
     f.write(f'{NNN}\n')
