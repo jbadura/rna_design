@@ -19,7 +19,7 @@ for veri, vero in [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnare
         seq = infile.readline().strip()
         infile.close()
 
-        command = ['/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', {seq}]
+        command = ['/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', seq]
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()

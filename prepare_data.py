@@ -19,7 +19,7 @@ for s in ['inputs', 'outputs']:
     mkdir(f'{s}/rnasfbinv_extended/')
 
 mkdir(f'outputs/rnaredprint/')
-mkdir(f'outputs/rnaredprint/')
+mkdir(f'outputs/rnaredprint_extended/')
 
 
 def remove_junk(s):
