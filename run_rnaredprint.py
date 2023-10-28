@@ -6,8 +6,8 @@ import subprocess
 
 for veri, vero in [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnaredprint_extended')]:
 
-    indir = f'inputs/{veri}'
-    outdir = f'outputs/{vero}'
+    indir = f'/rna_design/inputs/{veri}'
+    outdir = f'/rna_design/outputs/{vero}'
 
     for fn in os.listdir(indir):
         print(fn)

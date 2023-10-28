@@ -4,8 +4,8 @@ import subprocess
 
 for ver in ['rnasfbinv', 'rnasfbinv_extended']:
 
-    indir = f'inputs/{ver}'
-    outdir = f'outputs/{ver}'
+    indir = f'/rna_design/inputs/{ver}'
+    outdir = f'/rna_design/outputs/{ver}'
 
     for fn in os.listdir(indir):
         print(fn)
