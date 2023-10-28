@@ -42,9 +42,6 @@ for l in f:
     if name == 'Source': continue
     ID = int(l[-1])
     
-    if ID > 30:
-        break
-    
     fragment_structure = l[6]
     fragment_structure_mod = remove_junk(fragment_structure)
     NNN = 'N' * len(fragment_structure)
@@ -52,33 +49,29 @@ for l in f:
     fragment_structure_ext = l[9]
     fragment_structure_ext_mod = remove_junk(fragment_structure_ext)
     NNN_ext = 'N' * len(fragment_structure_ext)
-          
-    if len(fragment_structure_ext) > 100:
-        continue
-    
+
     ##### RNA inverse (also used for RNARedPrint #####
     f = open(f'inputs/rnainverse/{ID}.in', 'w')
     f.write(f'{fragment_structure_mod}\n')
     f.write(f'{NNN}\n')
     f.close()
-    
+
     f = open(f'inputs/rnainverse_extended/{ID}.in', 'w')
     f.write(f'{fragment_structure_ext_mod}\n')
     f.write(f'{NNN_ext}\n')
     f.close()
-    
+
     ##### RNA sfbinv #####
     f = open(f'inputs/rnasfbinv/{ID}.in', 'w')
     f.write(f'TARGET_STRUCTURE={fragment_structure_mod}\n')
     f.write(f'TARGET_SEQUENCE={NNN}\n')
     f.close()
-    
 
     f = open(f'inputs/rnasfbinv_extended/{ID}.in', 'w')
     f.write(f'TARGET_STRUCTURE={fragment_structure_ext_mod}\n')
     f.write(f'TARGET_SEQUENCE={NNN_ext}\n')
     f.close()
-    
+
     ##### Desi RNA #####
     f = open(f'inputs/desirna/{ID}.in', 'w')
     f.write('>name\n')
@@ -88,7 +81,7 @@ for l in f:
     f.write('>sec_struct\n')
     f.write(f'{fragment_structure_mod}\n')
     f.close()
-    
+
     f = open(f'inputs/desirna_extended/{ID}.in', 'w')
     f.write('>name\n')
     f.write(f'name_{ID}\n')
