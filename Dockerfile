@@ -33,5 +33,6 @@ RUN cd DesiRNA && python3 -m pip install -r requirements.txt && python3 -m pip i
 RUN git clone https://github.com/matandro/RNAsfbinv.git
 
 RUN apt install -y vim
+RUN apt install -y time
 
 WORKDIR /rna_workdir
