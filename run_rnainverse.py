@@ -32,7 +32,7 @@ for ver in ['rnainverse', 'rnainverse_extended']:
 
 
         outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.fold.err', 'a')
+        errfile = open(f'{outdir}/{tmp}.fold.err', 'w')
 
         infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
         
