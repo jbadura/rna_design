@@ -10,12 +10,12 @@ for ver in ['rnainverse', 'rnainverse_extended']:
     for fn in os.listdir(indir):
         print(fn)
         tmp = fn.split('.')[0]
-        outfile = open(f'{outdir}/{tmp}.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.err', 'w')
+        outfile = open(f'{outdir}/{tmp}.inv.out', 'w')
+        errfile = open(f'{outdir}/{tmp}.inv.err', 'w')
 
         infile = open(f'{indir}/{fn}', 'r')
 
-        command = ['RNAinverse']
+        command = ['time', 'RNAinverse']
         subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
         
         infile.close()
@@ -26,21 +26,19 @@ for ver in ['rnainverse', 'rnainverse_extended']:
         outfile = open(f'{outdir}/{tmp}.out', 'r')
         seq = outfile.readline().strip().split()[0]
         outfile.close()
-        outfile = open(f'{outdir}/{tmp}.in', 'w')
+        outfile = open(f'{outdir}/{tmp}.stripped.out', 'w')
         outfile.write(seq + '\n')
         outfile.close()
 
 
-        outfile = open(f'{outdir}/{tmp}.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.err', 'a')
+        outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
+        errfile = open(f'{outdir}/{tmp}.fold.err', 'a')
 
-        infile = open(f'{outdir}/{tmp}.in', 'r')
+        infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
         
-        command = ['RNAfold']
+        command = ['time', 'RNAfold']
         subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
         
         infile.close()
         outfile.close()
         errfile.close()
-        
-        os.remove(f'{outdir}/{tmp}.in')

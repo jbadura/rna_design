@@ -50,6 +50,9 @@ for l in f:
     fragment_structure_ext_mod = remove_junk(fragment_structure_ext)
     NNN_ext = 'N' * len(fragment_structure_ext)
 
+    if len(fragment_structure_ext_mod) > 100:
+        continue
+
     ##### RNA inverse (also used for RNARedPrint #####
     f = open(f'inputs/rnainverse/{ID}.in', 'w')
     f.write(f'{fragment_structure_mod}\n')

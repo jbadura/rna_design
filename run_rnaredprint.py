@@ -10,7 +10,6 @@ for veri, vero in [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnare
     outdir = f'/rna_design/outputs/{vero}'
 
     for fn in os.listdir(indir):
-        print(fn)
         tmp = fn.split('.')[0]
         outfile = open(f'{outdir}/{tmp}.out', 'w')
         errfile = open(f'{outdir}/{tmp}.err', 'w')
@@ -19,7 +18,7 @@ for veri, vero in [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnare
         seq = infile.readline().strip()
         infile.close()
 
-        command = ['/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', seq]
+        command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', seq]
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()

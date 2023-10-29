@@ -24,7 +24,7 @@ for ver in ['desirna', 'desirna_extended']:
         outfile = open(f'{outdir}/{tmp}.out', 'w')
         errfile = open(f'{outdir}/{tmp}.err', 'w')
 
-        command = ['python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
+        command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()
