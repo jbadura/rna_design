@@ -36,10 +36,11 @@ for resdir in ['rnainverse', 'rnainverse_extended']:
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         
+        structure = f.readline().strip()
         sequence = f.readline().strip().split()[0]
         
         f.close()
-        results[resdir][ID] = (sequence, 'N'*len(sequence))
+        results[resdir][ID] = (sequence, structure)
 #print('Done rnainverse')          
  
 for resdir in ['rnaredprint', 'rnaredprint_extended']:
