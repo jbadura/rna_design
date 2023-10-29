@@ -23,7 +23,7 @@ for ver in ['rnainverse', 'rnainverse_extended']:
         errfile.close()
         
         
-        outfile = open(f'{outdir}/{tmp}.out', 'r')
+        outfile = open(f'{outdir}/{tmp}.inv.out', 'r')
         seq = outfile.readline().strip().split()[0]
         outfile.close()
         outfile = open(f'{outdir}/{tmp}.stripped.out', 'w')
