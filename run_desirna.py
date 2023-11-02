@@ -6,19 +6,23 @@ if len(sys.argv) == 3:
     range_s = int(sys.argv[1])
     range_e = int(sys.argv[2])
 else:
-    range_s = -1
-    range_e = 10000
+    range_s = 0
+    range_e = 20000
 
-for ver in ['desirna', 'desirna_extended']:
+dirs = [('/rna_design/inputs/desirna', '/rna_design/outputs/desirna'), 
+        ('/rna_design/inputs/desirna_extended', '/rna_design/outputs/desirna_extended'),
+        ('/rna_design/inputs2/desirna', '/rna_design/outputs2/desirna')]
 
-    indir = f'/rna_design/inputs/{ver}'
-    outdir = f'/rna_design/outputs/{ver}'
+for indir, outdir in dirs:
 
-    for fn in os.listdir(indir):
+    to_do = os.listdir(indir)
+    to_do.sort()
+    to_do = to_do[range_s:range_e]
+    for fn in to_do:
         print(fn)
         tmp = fn.split('.')[0]
 
-        if not range_s <= int(tmp) < range_e:
+        if os.path.isfile(f'{outdir}/{tmp}.out'):
             continue
 
         outfile = open(f'{outdir}/{tmp}.out', 'w')

@@ -9,10 +9,10 @@ else:
     range_s = 0
     range_e = 20000
 
-# RNARedPrint uses inputs from rnainverse
-dirs = [('/rna_design/inputs/rnainversed', '/rna_design/outputs/rnaredprint'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnaredprint_extended'),
-        ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnaredprint')]
+# info-rna uses inputs from rnainverse
+dirs = [('/rna_design/inputs/rnainversed', '/rna_design/outputs/mcts-rna'), 
+        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/mcts-rna_extended'),
+        ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/mcts-rna')]
 
 for indir, outdir in dirs:
 
@@ -32,7 +32,7 @@ for indir, outdir in dirs:
         seq = infile.readline().strip()
         infile.close()
 
-        command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', seq]
+        command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', seq]
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()

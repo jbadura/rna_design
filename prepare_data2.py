@@ -27,16 +27,18 @@ def remove_junk(s):
     return ''.join(res)
 
 
-f = open('data/loops_id.csv', 'r')
 for fn in os.listdir('data2'):
-    f = open(f'data2/{fn}', 'r')
+    f_list = open(f'data2/{fn}', 'r')
     fn_pref = fn.split('.')[0]
     i = 1
-    for l in f:
+    for l in f_list:
         if l.startswith('Source'): continue
     
-        l = l.strip().split('.')
+        l = l.strip().split(',')
         ID = f'{fn_pref}_{i}'
+        if len(l) <= 4:
+            print('Error in', fn)
+            continue
         fragment_structure = l[3]
         fragment_structure_mod = remove_junk(fragment_structure)
         NNN = 'N' * len(fragment_structure)
@@ -64,3 +66,4 @@ for fn in os.listdir('data2'):
         f.write('>sec_struct\n')
         f.write(f'{fragment_structure_mod}\n')
         f.close()
+    f_list.close()
