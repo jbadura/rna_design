@@ -10,7 +10,7 @@ else:
     range_e = 20000
 
 # RNARedPrint uses inputs from rnainverse
-dirs = [('/rna_design/inputs/rnainversed', '/rna_design/outputs/rnaredprint'), 
+dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnaredprint'), 
         ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnaredprint_extended'),
         ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnaredprint')]
 

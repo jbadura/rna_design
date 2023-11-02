@@ -9,7 +9,7 @@ else:
     range_s = 0
     range_e = 20000
 
-dirs = [('/rna_design/inputs/rnainversed', '/rna_design/outputs/rnainverse'), 
+dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnainverse'), 
         ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnainverse_extended'),
         ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnainverse')]
 
