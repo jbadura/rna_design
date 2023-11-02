@@ -8,10 +8,6 @@ RUN apt -y update && apt install -y \
   pip \
   git \
   default-jdk
-  
-#RUN add-apt-repository ppa:bibi-help/bibitools
-
-#RUN apt -y update && apt install -y pkiss 
 
 RUN pip install numpy
 
@@ -34,5 +30,31 @@ RUN git clone https://github.com/matandro/RNAsfbinv.git
 
 RUN apt install -y vim
 RUN apt install -y time
+
+# install Modena
+RUN wget http://rna.eit.hirosaki-u.ac.jp/modena/multi/v0067b/modena0067b_x86_64.tar.gz && tar -xzvf modena0067b_x86_64.tar.gz 
+
+# install dss-opt
+RUN apt install -y libgsl-dev
+RUN git clone https://github.com/marcom/dss-opt.git
+RUN cd dss-opt && make
+
+# install INFO-RNA
+RUN wget http://www.bioinf.uni-freiburg.de/Software/INFO-RNA/versions/INFO-RNA-2.1.2.tar.gz
+RUN tar -xzvf INFO-RNA-2.1.2.tar.gz
+RUN apt install -y libc6-i386
+RUN apt install -y lib32stdc++6
+
+RUN apt install -y python2
+RUN wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
+RUN python2 get-pip.py
+RUN pip2 install numpy
+RUN pip2 install viennarna
+
+# install MCTS-RNA
+RUN git clone https://github.com/tsudalab/MCTS-RNA.git
+
+# install antaRNA
+RUN wget http://www.bioinf.uni-freiburg.de/Software/antaRNA/antaRNA_v114.py
 
 WORKDIR /rna_workdir
