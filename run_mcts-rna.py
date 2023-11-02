@@ -32,7 +32,7 @@ for indir, outdir in dirs:
         seq = infile.readline().strip()
         infile.close()
 
-        command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', seq]
+        command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', '-s', seq]
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()
