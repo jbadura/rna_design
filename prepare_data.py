@@ -20,7 +20,10 @@ for s in ['inputs', 'outputs']:
 
 mkdir(f'outputs/rnaredprint/')
 mkdir(f'outputs/rnaredprint_extended/')
-
+mkdir(f'outputs/info-rna/')
+mkdir(f'outputs/info-rna_extended/')
+mkdir(f'outputs/dss-opt/')
+mkdir(f'outputs/dss-opt_extended/')
 
 def remove_junk(s):
     res = []
@@ -53,7 +56,7 @@ for l in f:
     if len(fragment_structure_ext_mod) > 100:
         continue
 
-    ##### RNA inverse (also used for RNARedPrint #####
+    ##### RNA inverse (also used for RNARedPrint, dss-opt, and info-rna) #####
     f = open(f'inputs/rnainverse/{ID}.in', 'w')
     f.write(f'{fragment_structure_mod}\n')
     f.write(f'{NNN}\n')

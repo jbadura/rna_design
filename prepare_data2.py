@@ -15,6 +15,8 @@ for s in ['inputs2', 'outputs2']:
     mkdir(f'{s}/rnainverse/')
     mkdir(f'{s}/rnasfbinv/')
 mkdir(f'outputs2/rnaredprint/')
+mkdir(f'outputs2/info-rna/')
+mkdir(f'outputs2/dss-opt/')
 
 
 def remove_junk(s):
@@ -45,7 +47,7 @@ for fn in os.listdir('data2'):
         
         i += 1
     
-        ##### RNA inverse (also used for RNARedPrint #####
+        ##### RNA inverse (also used for RNARedPrint, dss-opt, and info-rna) #####
         f = open(f'inputs2/rnainverse/{ID}.in', 'w')
         f.write(f'{fragment_structure_mod}\n')
         f.write(f'{NNN}\n')
