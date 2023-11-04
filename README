@@ -3,22 +3,22 @@
 2. prepare_data.py creates inputs and outputs direcotry and puts data in apropriate direcotry for each program. Characters other than () are changed to '.'.
 2.5 same as above for data in data2 dir.
 
-3. run_rnasfbinv.py runs command 
+3. run_rnasfbinv.py runs command (https://github.com/matandro/RNAsfbinv)
 python3 /RNAsfbinv/RNAfbinvCL.py -f infile 1> outfile 2> errfile
 for each file in inputs/rnasfbinv and saves the results in outputs/rnasfbinv 
 Example infile
 TARGET_STRUCTURE=(.....(((((((((.....(((((.(....).)))))......))))))))).........)
 TARGET_SEQUENCE=NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
-4. run_rnainverse.py runs command
+4. run_rnainverse.py runs command (https://www.tbi.univie.ac.at/RNA/RNAinverse.1.html)
 RNAinverse < infile 1> outfile 2> errfile
 for each file in inputs/rnainverse and saves the results in outputs/rnainverse 
 Example infile
 (.....(((((((((.....(((((.(....).)))))......))))))))).........)
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
-5. run_desirna.py runs command
-python3 /DesiRNA/DesiRNA.py -f' infile -t 10 1> outfile 2> errfile
+5. run_desirna.py runs command (https://github.com/fryzjergda/DesiRNA) 
+python3 /DesiRNA/DesiRNA.py -f' infile 1> outfile 2> errfile
 for each file in inputs/desirna and saves the results in outputs/desirna 
 Example infile
 >name
@@ -28,15 +28,15 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 >sec_struct
 (.....(((((((((.....(((((.(....).)))))......))))))))).........)
 
-6. run_rnaredprint.py runs command
+6. run_rnaredprint.py runs command (https://github.com/yannponty/RNARedPrint)
 /RNARedPrint/_inst/bin/RNARedPrint --num 1 seq 1> outfile 2> errfile
 where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/rnaredprint
 
-7. run_dss-opt.py runs command
+7. run_dss-opt.py runs command (https://github.com/marcom/dss-opt)
 /dss-opt/opt-md seq 1> outfile 2> errfile
 where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/dss-opt
 
-8. run_info-rna.py runs command
+8. run_info-rna.py runs command (https://github.com/BackofenLab/INFO-RNA)
 /INFO-RNA-2.1.2/INFO-RNA-2.1.2 seq 1> outfile 2> errfile
 where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/info-rna
 
