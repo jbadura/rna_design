@@ -38,7 +38,7 @@ for indir, outdir in dirs:
         outfile2 = open(f'{outdir}/{tmp}.stripped.out', 'w')
         for l in outfile:
             seq = l.strip().split()[0]
-            outfile.write(seq + '\n')
+            outfile2.write(seq + '\n')
         outfile.close()    
         outfile2.close()
 
