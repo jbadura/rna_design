@@ -11,8 +11,7 @@ else:
 
 # dss-opt uses inputs from rnainverse
 dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/dss-opt'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/dss-opt_extended'),
-        ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/dss-opt')]
+        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/dss-opt_extended')]
 
 for indir, outdir in dirs:
 

@@ -11,8 +11,7 @@ else:
 
 # info-rna uses inputs from rnainverse
 dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/mcts-rna'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/mcts-rna_extended'),
-        ('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/mcts-rna')]
+        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/mcts-rna_extended')]
 
 for indir, outdir in dirs:
 

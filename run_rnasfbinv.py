@@ -10,8 +10,7 @@ else:
     range_e = 20000
 
 dirs = [('/rna_design/inputs/rnasfbinv', '/rna_design/outputs/rnasfbinv'), 
-        ('/rna_design/inputs/rnasfbinv_extended', '/rna_design/outputs/rnasfbinv_extended'),
-        ('/rna_design/inputs2/rnasfbinv', '/rna_design/outputs2/rnasfbinv')]
+        ('/rna_design/inputs/rnasfbinv_extended', '/rna_design/outputs/rnasfbinv_extended')]
 
 for indir, outdir in dirs:
 
