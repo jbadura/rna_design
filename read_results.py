@@ -22,7 +22,7 @@ for resdir in ['desirna', 'desirna_extended']:
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         line = f.readline().strip()
-        while line != 'Closest solution:' and line != 'Best solution:':
+        while not line.startswith('Closest solution:') and not line.startswith('Best solution:'):
             line = f.readline().strip()
             
         sequence = f.readline().strip()
@@ -133,7 +133,7 @@ f_mis = open('results/missing.txt', 'w')
 
 for k1 in results:
     for k2 in results[k1]:
-        if results[k1][k2][0] == '' or results[k1][k2][1]:
+        if results[k1][k2][0] == '' or results[k1][k2][1] == '':
             f_mis.write(f'Missing res for {k1} {k2}\n')
 f_mis.close()
 
