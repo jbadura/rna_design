@@ -21,7 +21,7 @@ def get_rna_distance(str1, str2):
     
     tmp_in = open('tmp.in', 'r')
     tmp_out = open('tmp.out', 'w')
-    subprocess.run(['RNAdistance'], stdout=tmp_out, strin=tmp_in)
+    subprocess.run(['RNAdistance'], stdout=tmp_out, stdin=tmp_in)
     tmp_in.close()
     tmp_out.close()
     
