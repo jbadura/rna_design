@@ -57,4 +57,6 @@ RUN git clone https://github.com/tsudalab/MCTS-RNA.git
 # install antaRNA
 RUN wget http://www.bioinf.uni-freiburg.de/Software/antaRNA/antaRNA_v114.py
 
+RUN pip3 install minineedle
+
 WORKDIR /rna_workdir
