@@ -30,7 +30,7 @@ for resdir in ['desirna', 'desirna_extended']:
         
         f.close()
         results[resdir][ID] = (sequence, structure)
-#print('Done desirna')    
+print('Done desirna')    
         
 for resdir in ['rnainverse', 'rnainverse_extended']:
     results[resdir] = {}
@@ -46,7 +46,7 @@ for resdir in ['rnainverse', 'rnainverse_extended']:
         
         f.close()
         results[resdir][ID] = (sequence, structure)
-#print('Done rnainverse')          
+print('Done rnainverse')          
  
 for resdir in ['rnaredprint', 'rnaredprint_extended']:
     results[resdir] = {}
@@ -62,7 +62,7 @@ for resdir in ['rnaredprint', 'rnaredprint_extended']:
         
         f.close()
         results[resdir][ID] = (sequence, structure)
-#print('Done rnaredprint') 
+print('Done rnaredprint') 
      
 for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
     results[resdir] = {}
@@ -79,7 +79,7 @@ for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
          
         f.close()
         results[resdir][ID] = (sequence, structure)     
-#print('Done rnasfbinv')        
+print('Done rnasfbinv')        
 
 for resdir in ['dss-opt', 'dss-opt_extended']:
     results[resdir] = {}
@@ -98,7 +98,7 @@ for resdir in ['dss-opt', 'dss-opt_extended']:
                 structure = l.split()[-1]    
         f.close()
         results[resdir][ID] = (sequence, structure)  
-#print('Done dss-opt')
+print('Done dss-opt')
 
 for resdir in ['info-rna', 'info-rna_extended']:
     results[resdir] = {}
@@ -120,7 +120,7 @@ for resdir in ['info-rna', 'info-rna_extended']:
                     structure = l.split()[1]    
         f.close()
         results[resdir][ID] = (sequence, structure)  
-#print('Done info-rna')
+print('Done info-rna')
 
 try:
     os.mkdir('results')
