@@ -6,7 +6,7 @@ def get_needlewunsh_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
 
-    a = needle.NeedlemanWunsch(og_seq, al_seq)
+    a = needle.NeedlemanWunsch(seq1, seq2)
     a.align()
     seq_score = a.get_score()
     return seq_score
@@ -16,7 +16,7 @@ def get_rna_distance(str1, str2):
         return 'NA'
 
     tmp_f = open('tmp.in', 'w')
-    tmp_f.write(f'{og_str}\n{al_str}')
+    tmp_f.write(f'{str1}\n{str2}')
     tmp_f.close()
     
     tmp_in = open('tmp.in', 'r')
