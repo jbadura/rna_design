@@ -12,10 +12,13 @@ def remove_junk(s):
 
 results = {}
 
+
 for resdir in ['desirna', 'desirna_extended']:
     results[resdir] = {}
     for fn in os.listdir(f'outputs/{resdir}'):
         if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         line = f.readline().strip()
@@ -33,6 +36,8 @@ for resdir in ['rnainverse', 'rnainverse_extended']:
     results[resdir] = {}
     for fn in os.listdir(f'outputs/{resdir}'):
         if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         
@@ -47,6 +52,8 @@ for resdir in ['rnaredprint', 'rnaredprint_extended']:
     results[resdir] = {}
     for fn in os.listdir(f'outputs/{resdir}'):
         if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         
@@ -61,6 +68,8 @@ for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
     results[resdir] = {}
     for fn in os.listdir(f'outputs/{resdir}'):
         if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         
@@ -72,10 +81,62 @@ for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
         results[resdir][ID] = (sequence, structure)     
 #print('Done rnasfbinv')        
 
+for resdir in ['dss-opt', 'dss-opt_extended']:
+    results[resdir] = {}
+    for fn in os.listdir(f'outputs/{resdir}'):
+        if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
+        ID = fn.split('.')[0]
+        f = open(f'outputs/{resdir}/{fn}', 'r')
+
+        for l in f:
+            l = l.strip()
+            if l.startswith('vienna'):
+                sequence = l.split()[-1]
+            if l.startswith('seq'):
+                structure = l.split()[-1]    
+        f.close()
+        results[resdir][ID] = (sequence, structure)  
+#print('Done dss-opt')
+
+for resdir in ['info-rna', 'info-rna_extended']:
+    results[resdir] = {}
+    for fn in os.listdir(f'outputs/{resdir}'):
+        if fn.endswith('.err'): continue
+        sequence = ''
+        structure = ''
+        ID = fn.split('.')[0]
+        f = open(f'outputs/{resdir}/{fn}', 'r')
+        res_start = False
+        for l in f:
+            l = l.strip()
+            if l.startswith('Local Search Results'):
+                res_start = True
+            if res_start:
+                if l.startswith('MFE:'):    
+                    sequence = l.split()[1]
+                if l.startswith('NO_MFE:'):
+                    structure = l.split()[1]    
+        f.close()
+        results[resdir][ID] = (sequence, structure)  
+#print('Done info-rna')
+
+try:
+    os.mkdir('results')
+except:
+    pass
  
 f = open('data/loops_id.csv', 'r')
-f_o1 = open('results.txt', 'w')
-f_o2 = open('results_extended.txt', 'w')
+f_o1 = open('results/results.txt', 'w')
+f_o2 = open('results/results_extended.txt', 'w')
+f_mis = open('resu;ts/missing.txt', 'w')
+
+for k1 in results:
+    for k2 in results[k1]:
+        if results[k1][k2][0] == '' or results[k1][k2][1]:
+            f_mis.write(f'Missing res for {k1} {k2}\n')
+
 for l in f:
     l = l.strip().split(',')
     

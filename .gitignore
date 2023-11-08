@@ -2,5 +2,8 @@ outputs/*
 inputs/*
 outputs2/*
 inputs2/*
+
+results/*
+
 results.txt
 results_extended.txt
