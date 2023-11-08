@@ -3,7 +3,7 @@ from minineedle import needle
 import subprocess
 
 def get_needlewunsh_distance(seq1, seq2):
-    if seq1 == '' or seq2 == ''
+    if seq1 == '' or seq2 == '':
         return 'NA'
 
     a = needle.NeedlemanWunsch(og_seq, al_seq)
