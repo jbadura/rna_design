@@ -16,7 +16,7 @@ results = {}
 for resdir in ['desirna', 'desirna_extended']:
     results[resdir] = {}
     for fn in os.listdir(f'outputs/{resdir}'):
-        if fn.endswith('.err'): continue
+        if not fn.endswith('.fold.out'): continue
         sequence = ''
         structure = ''
         ID = fn.split('.')[0]
