@@ -142,7 +142,8 @@ algs_order.sort()
 
 to_write = ['ID', 'sequence', 'structure', 'sequence_extended', 'structure_extended']
 for algo in algs_order:
-    to_write.append(algo)
+    to_write.append(f'{algo}_sequence')
+    to_write.append(f'{algo}_structure')
 print(';'.join(to_write), file=f_o)
 
 for l in f:
