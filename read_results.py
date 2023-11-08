@@ -159,7 +159,7 @@ for l in f:
     fragment_sequence_ext = l[8]
     fragment_structure_ext = remove_junk(l[9])
     
-    if len(fragment_structure_ext_mod) > 100:
+    if len(fragment_structure_ext) > 100:
         continue
 
     to_write = [ID, fragment_sequence, fragment_structure, fragment_sequence_ext, fragment_structure_ext]
