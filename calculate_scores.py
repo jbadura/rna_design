@@ -30,7 +30,6 @@ def get_rna_distance(str1, str2):
     line = line.strip().split()
     return line[-1]
 
-#ID;sequence;structure;sequence_extended;structure_extended;desirna;desirna_extended;dss-opt;dss-opt_extended;info-rna;info-rna_extended;rnainverse;rnainverse_extended;rnaredprint;rnaredprint_extended;rnasfbinv;rnasfbinv_extended
 f = open('/rna_design/results/results.txt', 'r')
 header = f.readline().strip().split(';')
 

@@ -41,8 +41,8 @@ for resdir in ['rnainverse', 'rnainverse_extended']:
         ID = fn.split('.')[0]
         f = open(f'outputs/{resdir}/{fn}', 'r')
         
-        structure = f.readline().strip()
-        sequence = f.readline().strip().split()[0]
+        sequence = f.readline().strip()
+        structure = f.readline().strip().split()[0]
         
         f.close()
         results[resdir][ID] = (sequence, structure)
@@ -93,9 +93,9 @@ for resdir in ['dss-opt', 'dss-opt_extended']:
         for l in f:
             l = l.strip()
             if l.startswith('vienna'):
-                sequence = l.split()[-1]
+                structure = l.split()[-1]
             if l.startswith('seq'):
-                structure = l.split()[-1]    
+                sequence = l.split()[-1]    
         f.close()
         results[resdir][ID] = (sequence, structure)  
 print('Done dss-opt')
