@@ -48,7 +48,7 @@ def run_info_rna(indir, outdir, fn, repeats=1):
     tmp = fn.split('.')[0]
     
     if os.path.isfile(f'{outdir}/{tmp}.out'):
-        continue
+        return
     
     outfile = open(f'{outdir}/{tmp}.out', 'w')
     errfile = open(f'{outdir}/{tmp}.err', 'w')
@@ -69,7 +69,7 @@ def run_mcts_rna(indir, outdir, fn, repeats=1):
     tmp = fn.split('.')[0]
     
     if os.path.isfile(f'{outdir}/{tmp}.out'):
-        continue
+        return
     
     outfile = open(f'{outdir}/{tmp}.out', 'w')
     errfile = open(f'{outdir}/{tmp}.err', 'w')
@@ -88,7 +88,7 @@ def run_rnainverse(indir, outdir, fn, repeats=1):
     tmp = fn.split('.')[0]
     
     if os.path.isfile(f'{outdir}/{tmp}.inv.out'):
-        continue
+        return
     
     outfile = open(f'{outdir}/{tmp}.inv.out', 'w')
     errfile = open(f'{outdir}/{tmp}.inv.err', 'w')
@@ -129,7 +129,7 @@ def run_rnaredprint(indir, outdir, fn, repeats=1):
     tmp = fn.split('.')[0]
     
     if os.path.isfile(f'{outdir}/{tmp}.out'):
-        continue
+        return
     
     outfile = open(f'{outdir}/{tmp}.out', 'w')
     errfile = open(f'{outdir}/{tmp}.err', 'w')
