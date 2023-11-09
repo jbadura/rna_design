@@ -104,6 +104,7 @@ def read_dss_opt(results):
         ID = '_'.join(fn.split('_')[:-1])
         if ID in done: continue
         done.add(ID)
+        results[resdir][ID] = []
         for i in range(10):
             sequence = ''
             structure = ''
