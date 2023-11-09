@@ -149,7 +149,7 @@ def check_missing(results):
             if len(results[k1][k2]) != 10:
                 f_mis.write(f'Missing res for {k1} {k2}, no 10!\n')
             for sequence, structure in results[k1][k2]:
-                if sequence == '' or structure == '1':
+                if sequence == '' or structure == '':
                     f_mis.write(f'Missing res for {k1} {k2}\n')
     f_mis.close()
 
