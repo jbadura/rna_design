@@ -85,7 +85,6 @@ def read_rnasfbinv(results):
         for i in range(10):
             sequence = ''
             structure = ''
-            ID = fn.split('.')[0]
             f = open(f'outputs2/{resdir}/{ID}_{i}.out', 'r')
             
             f.readline()
