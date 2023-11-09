@@ -189,8 +189,8 @@ def main():
     else: 
         run_algo = ALGO[sys.argv[1]]
         dirs = DIRS[sys.argv[4]][sys.argv[1]]
-        range_s = int(sys.argv[1])
-        range_e = int(sys.argv[2])
+        range_s = int(sys.argv[2])
+        range_e = int(sys.argv[3])
         repeats = 1 if sys.argv[4] == '1' else 10
     
     for indir, outdir in dirs:
