@@ -73,7 +73,7 @@ def main():
         score_seq_ext = get_needlewunsh_distance(og_seq_ext, al_seq_ext)
         score_str_ext = get_rna_distance(og_str_ext, al_str_ext)
         
-        f_out.write(f'{ID};{og_seq};{og_str};{al_seq};{os_str_ext};{og_seq_ext};{score_seq};{al_str};{score_str};{al_seq_ext};{score_seq_ext};{al_str_ext};{score_str_ext}\n')
+        f_out.write(f'{ID};{og_seq};{og_str};{og_str_ext};{og_seq_ext};{al_seq};{score_seq};{al_str};{score_str};{al_seq_ext};{score_seq_ext};{al_str_ext};{score_str_ext}\n')
         
     f.close()
     f_out.close()
