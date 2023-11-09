@@ -208,3 +208,5 @@ def main():
 
     f.close()
     f_o.close()
+
+main()
