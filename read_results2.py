@@ -37,7 +37,7 @@ def read_desirna(results):
     print('Done desirna')    
 
 def read_rnainverse(results): 
-    resdir = 'rnainverse':
+    resdir = 'rnainverse'
     results[resdir] = {}
     for fn in os.listdir(f'outputs2/{resdir}'):
         if not fn.endswith('.fold.out'): continue
@@ -55,7 +55,7 @@ def read_rnainverse(results):
     print('Done rnainverse')          
  
 def read_rnaredprint(results):
-    resdir = 'rnaredprint':
+    resdir = 'rnaredprint'
     results[resdir] = {}
     for fn in os.listdir(f'outputs2/{resdir}'):
         if fn.endswith('.err'): continue
@@ -138,7 +138,7 @@ def read_info_rna(results):
             if res_start:
                 if l.startswith('MFE:'):    
                     sequence = l.split()[1]
-                    results[resdir][ID].append((sequence, '')     
+                    results[resdir][ID].append((sequence, ''))     
         f.close()    
     print('Done info-rna')
 
