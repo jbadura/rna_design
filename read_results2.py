@@ -10,7 +10,7 @@ def remove_pseudoknots(s):
             res.append('.')
     return ''.join(res)
 
-def read_desirna(results)
+def read_desirna(results):
     resdir = 'desirna'
     results[resdir] = {}
     done = set()
@@ -72,7 +72,7 @@ def read_rnaredprint(results):
         f.close()
     print('Done rnaredprint') 
 
-def read_rnasfbinv(results) 
+def read_rnasfbinv(results):
     resdir = 'rnasfbinv'
     results[resdir] = {}
     done = set()
@@ -120,7 +120,7 @@ def read_dss_opt(results):
             results[resdir][ID].append((sequence, structure))
     print('Done dss-opt')
 
-def read_info_rna(results)
+def read_info_rna(results):
     resdir = 'info-rna'
     results[resdir] = {}
     for fn in os.listdir(f'outputs2/{resdir}'):
@@ -154,7 +154,7 @@ def check_missing(results):
     f_mis.close()
 
 
-def main()
+def main():
     try:
         os.mkdir('results2')
     except:
