@@ -184,7 +184,7 @@ DIRS = {'1':
 
 def main():
     if len(sys.argv) != 5:
-        print('Usage: python3 run.py algoname start end dataset'
+        print('Usage: python3 run.py algoname start end dataset')
         exit()
     else: 
         run_algo = ALGO[sys.argv[1]]
