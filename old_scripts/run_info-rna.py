@@ -10,8 +10,7 @@ else:
     range_e = 20000
 
 # info-rna uses inputs from rnainverse
-dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/info-rna'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/info-rna_extended')]
+dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/info-rna'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/info-rna_extended')]
 
 for indir, outdir in dirs:
 

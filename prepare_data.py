@@ -8,6 +8,15 @@ def mkdir(d):
         pass
 
 
+def remove_pseudoknots(s):
+    res = []
+    for c in s:
+        if c in '.()':
+            res.append(c)
+        else:
+            res.append('.')
+    return ''.join(res)
+
 mkdir('outputs')
 mkdir('inputs')
 for s in ['inputs', 'outputs']:
@@ -25,16 +34,6 @@ mkdir(f'outputs/info-rna_extended/')
 mkdir(f'outputs/dss-opt/')
 mkdir(f'outputs/dss-opt_extended/')
 
-def remove_junk(s):
-    res = []
-    for c in s:
-        if c in '.()':
-            res.append(c)
-        else:
-            res.append('.')
-    return ''.join(res)
-
-
 f = open('data/loops_id.csv', 'r')
 
 for l in f:
@@ -46,11 +45,11 @@ for l in f:
     ID = int(l[-1])
     
     fragment_structure = l[6]
-    fragment_structure_mod = remove_junk(fragment_structure)
+    fragment_structure_mod = remove_pseudoknots(fragment_structure)
     NNN = 'N' * len(fragment_structure)
     
     fragment_structure_ext = l[9]
-    fragment_structure_ext_mod = remove_junk(fragment_structure_ext)
+    fragment_structure_ext_mod = remove_pseudoknots(fragment_structure_ext)
     NNN_ext = 'N' * len(fragment_structure_ext)
 
     if len(fragment_structure_ext_mod) > 100:

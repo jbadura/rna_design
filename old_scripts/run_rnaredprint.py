@@ -9,9 +9,8 @@ else:
     range_s = 0
     range_e = 20000
 
-# dss-opt uses inputs from rnainverse
-dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/dss-opt'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/dss-opt_extended')]
+# RNARedPrint uses inputs from rnainverse
+dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnaredprint'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnaredprint_extended')]
 
 for indir, outdir in dirs:
 
@@ -31,7 +30,7 @@ for indir, outdir in dirs:
         seq = infile.readline().strip()
         infile.close()
 
-        command = ['time', '/dss-opt/opt-md', seq]
+        command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', '1', seq]
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()

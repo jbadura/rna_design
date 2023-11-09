@@ -4,6 +4,7 @@ outputs2/*
 inputs2/*
 
 results/*
+plots/*
 
 results.txt
 results_extended.txt

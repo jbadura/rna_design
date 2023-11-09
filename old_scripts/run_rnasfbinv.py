@@ -9,9 +9,7 @@ else:
     range_s = 0
     range_e = 20000
 
-# info-rna uses inputs from rnainverse
-dirs = [('/rna_design/inputs/rnainverse', '/rna_design/outputs/mcts-rna'), 
-        ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/mcts-rna_extended')]
+dirs = [('/rna_design/inputs/rnasfbinv', '/rna_design/outputs/rnasfbinv'), ('/rna_design/inputs/rnasfbinv_extended', '/rna_design/outputs/rnasfbinv_extended')]
 
 for indir, outdir in dirs:
 
@@ -27,12 +25,9 @@ for indir, outdir in dirs:
         outfile = open(f'{outdir}/{tmp}.out', 'w')
         errfile = open(f'{outdir}/{tmp}.err', 'w')
 
-        infile = open(f'{indir}/{fn}', 'r')
-        seq = infile.readline().strip()
-        infile.close()
-
-        command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', '-s', seq]
+        command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{fn}']
         subprocess.run(command, stdout=outfile, stderr=errfile)
         
         outfile.close()
         errfile.close()
+

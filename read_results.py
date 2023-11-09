@@ -1,7 +1,7 @@
 import os
 import sys
 
-def remove_junk(s):
+def remove_pseudoknots(s):
     res = []
     for c in s:
         if c in '.()':
@@ -155,10 +155,10 @@ for l in f:
     ID = l[-1]
     
     fragment_sequence = l[5]
-    fragment_structure = remove_junk(l[6])
+    fragment_structure = remove_pseudoknots(l[6])
     
     fragment_sequence_ext = l[8]
-    fragment_structure_ext = remove_junk(l[9])
+    fragment_structure_ext = remove_pseudoknots(l[9])
     
     if len(fragment_structure_ext) > 100:
         continue
