@@ -206,7 +206,7 @@ def main():
 
             print(';'.join(to_write), file=f_o)
 
-    f.close()
+        f_list.close()
     f_o.close()
 
 main()
