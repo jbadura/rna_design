@@ -11,6 +11,19 @@ def get_needlewunsh_distance(seq1, seq2):
     seq_score = a.get_score()
     return seq_score
 
+def get_sequenceidentity_distance_1(seq1, seq2):
+    if len(seq1) != len(seq2):
+        return 'NA'
+
+    return sum([a==b for a,b in zip(seq1, seq2)])/len(seq1)
+
+def get_sequenceidentity_distance_2(seq1, seq2):
+    if len(seq1) != len(seq2):
+        return 'NA'
+    return 'NA'
+    LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2, '?': 3}
+    return sum([LOOKUP[a]==LOOKUP[b] for a,b in zip(seq1, seq2)])/len(seq1)
+
 def get_rnapdist_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -59,7 +72,7 @@ def main():
             f_outs[algo] = open(f'/rna_design/results2/{algo}_res.txt', 'w')
             to_write = ['ID', 'sequence', 'structure']
             for test in range(10):
-                to_write.extend([f'{algo}_seqence', f'score_{algo}_seqence', f'{algo}_structure', f'score_{algo}_structure'])
+                to_write.extend([f'{algo}_seqence', f'rnapdist_{algo}_sequence', f'seqidentity_{algo}_sequence', f'seqidentity2_{algo}_sequence', f'{algo}_structure', f'rnadistance_{algo}_structure'])
             print(*to_write, file=f_outs[algo])
                 
             
@@ -78,12 +91,18 @@ def main():
             for test_num in range(10):
                 al_seq = l[i]
                 al_str = l[i+1]
-                score_seq = get_rnapdist_distance(og_seq, al_seq)
-                score_str = get_rna_distance(og_str, al_str)
+                
+                rnapdist_seq = get_rnapdist_distance(og_seq, al_seq)
+                rnadist_str = get_rna_distance(og_str, al_str)
+                seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
+                seqidentity2 = get_sequenceidentity_distance_2(og_seq, al_seq)
+                
                 to_write.append(al_seq)
-                to_write.append(score_seq)
+                to_write.append(rnapdist_seq)
+                to_write.append(seqidentity)
+                to_write.append(seqidentity2)
                 to_write.append(al_str)
-                to_write.append(score_str)
+                to_write.append(rnadist_str)
                 i += 2
             print(*to_write, file=f_outs[algo])
         
