@@ -84,8 +84,8 @@ def main():
                 to_write.append(score_seq)
                 to_write.append(al_str)
                 to_write.append(score_str)
+                i += 2
             print(*to_write, file=f_outs[algo])
-            i += 2
         
     f.close()
     for fo in f_outs.values():
