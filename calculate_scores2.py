@@ -84,6 +84,8 @@ def main():
         og_seq = l[1]
         og_str = l[2]
         
+        print(ID)
+
         i = 3
         for alg_num in range(6):
             algo = header[i].split('_')[0]
