@@ -21,7 +21,7 @@ def get_sequenceidentity_distance_2(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
 
-    LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2}
+    LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2, '?': 3}
     return sum([LOOKUP[a]==LOOKUP[b] for a,b in zip(seq1, seq2)])/len(seq1)
 
 def get_rnapdist_distance(seq1, seq2):
@@ -95,6 +95,8 @@ def main():
             og_str_ext = l[4]
             al_seq_ext = l[algo_i+2]
             al_str_ext = l[algo_i+3]
+
+            print(algo, ID)
 
             rnapdist_seq = get_rnapdist_distance(og_seq, al_seq)
             rnadist_str = get_rna_distance(og_str, al_str)
