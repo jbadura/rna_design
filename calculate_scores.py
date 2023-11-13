@@ -11,6 +11,19 @@ def get_needlewunsh_distance(seq1, seq2):
     seq_score = a.get_score()
     return seq_score
 
+def get_sequenceidentity_distance_1(seq1, seq2):
+    if len(seq1) != len(seq2):
+        return 'NA'
+
+    return sum([a==b for a,b in zip(seq1, seq2)])/len(seq1)
+
+def get_sequenceidentity_distance_2(seq1, seq2):
+    if len(seq1) != len(seq2):
+        return 'NA'
+
+    LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2}
+    return sum([LOOKUP[a]==LOOKUP[b] for a,b in zip(seq1, seq2)])/len(seq1)
+
 def get_rnapdist_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -64,7 +77,9 @@ def main():
             exit()
 
         f_out = open(f'/rna_design/results/{algo}_res.txt', 'w')
-        f_out.write(f'ID;sequence;structure;sequence_extended;structure_extended;{algo}_seqence;score_{algo}_sequence;{algo}_structure;score_{algo}_structure;{algo}_seqence_extended;score_{algo}_sequence_extended;{algo}_structure_extended;score_{algo}_structure_extended\n')
+        f_out.write(f'ID;sequence;structure;sequence_extended;structure_extended;')
+        f_out.write(f'{algo}_seqence;rnapdist_{algo}_sequence;seqidentity_{algo}_sequence;seqidentity2_{algo}_sequence;{algo}_structure;rnadistance_{algo}_structure;')
+        f_out.write(f'{algo}_seqence_extended;rnapdist_{algo}_sequence_extended;seqidentity_{algo}_sequence_extended;seqidentity2_{algo}_sequence_extended;{algo}_structure_extended;rnadistance_{algo}_structure_extended\n')
 
         for l in f:
             l = l.strip().split(';')
@@ -81,13 +96,17 @@ def main():
             al_seq_ext = l[algo_i+2]
             al_str_ext = l[algo_i+3]
 
-            score_seq = get_rnapdist_distance(og_seq, al_seq)
-            score_str = get_rna_distance(og_str, al_str)
+            rnapdist_seq = get_rnapdist_distance(og_seq, al_seq)
+            rnadist_str = get_rna_distance(og_str, al_str)
+            seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
+            seqidentity2 = get_sequenceidentity_distance_2(og_seq, al_seq)
 
-            score_seq_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
-            score_str_ext = get_rna_distance(og_str_ext, al_str_ext)
+            rnapdist_seq_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
+            rnadist_str_ext = get_rna_distance(og_str_ext, al_str_ext)
+            seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
+            seqidentity2_ext = get_sequenceidentity_distance_2(og_seq_ext, al_seq_ext)
 
-            f_out.write(f'{ID};{og_seq};{og_str};{og_seq_ext};{og_str_ext};{al_seq};{score_seq};{al_str};{score_str};{al_seq_ext};{score_seq_ext};{al_str_ext};{score_str_ext}\n')
+            f_out.write(f'{ID};{og_seq};{og_str};{og_seq_ext};{og_str_ext};{al_seq};{rnapdist_seq};{seqidentity};{seqidentity2};{al_str};{rnadist_str};{al_seq_ext};{rnapdist_seq_ext};{seqidentity_ext};{seqidentity2_ext};{al_str_ext};{rnadist_str_ext}\n')
 
         f.close()
         f_out.close()
