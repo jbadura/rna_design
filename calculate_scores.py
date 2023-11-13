@@ -64,7 +64,7 @@ def main():
             exit()
 
         f_out = open(f'/rna_design/results/{algo}_res.txt', 'w')
-        f.out.write(f'ID;sequence;structure;sequence_extended;structure_extended;{algo}_seqence;score_{algo}_sequence;{algo}_structure;score_{algo}_structure;{algo}_seqence_extended;score_{algo}_sequence_extended;{algo}_structure_extended;score_{algo}_structure_extended\n')
+        f_out.write(f'ID;sequence;structure;sequence_extended;structure_extended;{algo}_seqence;score_{algo}_sequence;{algo}_structure;score_{algo}_structure;{algo}_seqence_extended;score_{algo}_sequence_extended;{algo}_structure_extended;score_{algo}_structure_extended\n')
 
         for l in f:
             l = l.strip().split(';')
