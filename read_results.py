@@ -149,7 +149,6 @@ def main():
     read_dss_opt(results)
     read_info_rna(results)
     check_missing(results)
-    check_missing(results)
     
     f = open('data/loops_id.csv', 'r')
     f_o = open('results/results.txt', 'w')
@@ -165,18 +164,18 @@ def main():
 
     for l in f:
         l = l.strip().split(',')
-        
+
         name = l[0]
-        
+
         if name == 'Source': continue
         ID = l[-1]
-        
+
         fragment_sequence = l[5]
         fragment_structure = remove_pseudoknots(l[6])
-        
+
         fragment_sequence_ext = l[8]
         fragment_structure_ext = remove_pseudoknots(l[9])
-        
+
         if len(fragment_structure_ext) > 100:
             continue
 
@@ -184,10 +183,10 @@ def main():
         for algo in algs_order:
             to_write.append(results[algo][ID][0])
             to_write.append(results[algo][ID][1])
-        
+
         print(';'.join(to_write), file=f_o)
 
     f.close()
     f_o.close()
-    
+
 main()
