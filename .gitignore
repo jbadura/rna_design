@@ -5,6 +5,8 @@ inputs2/*
 
 results/*
 plots/*
+results2/*
+plots2/*
 
 results.txt
 results_extended.txt
