@@ -12,11 +12,11 @@ def get_needlewunsh_distance(seq1, seq2):
     return seq_score
 
 def get_rnapdist_distance(seq1, seq2):
-    if len(str1) != len(str2):
+    if len(seq1) != len(seq2):
         return 'NA'
 
     tmp_f = open('tmp.in', 'w')
-    tmp_f.write(f'{str1}\n{str2}')
+    tmp_f.write(f'{seq1}\n{seq2}')
     tmp_f.close()
     
     tmp_in = open('tmp.in', 'r')
