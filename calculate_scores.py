@@ -20,7 +20,7 @@ def get_sequenceidentity_distance_1(seq1, seq2):
 def get_sequenceidentity_distance_2(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
-
+    return 'NA'
     LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2, '?': 3}
     return sum([LOOKUP[a]==LOOKUP[b] for a,b in zip(seq1, seq2)])/len(seq1)
 
