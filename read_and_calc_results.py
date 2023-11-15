@@ -3,6 +3,8 @@ import sys
 from minineedle import needle
 import subprocess
 
+OUTDIR = '/rna_design/outputs'
+
 def get_needlewunsh_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -75,12 +77,12 @@ def remove_pseudoknots(s):
 def read_desirna(results):
     for resdir in ['desirna', 'desirna_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if fn.endswith('.err'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
             line = f.readline().strip()
             while not line.startswith('Closest solution:') and not line.startswith('Best solution:'):
                 line = f.readline().strip()
@@ -89,66 +91,66 @@ def read_desirna(results):
             structure = f.readline().strip()
             
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def read_rnainverse(results): 
     for resdir in ['rnainverse', 'rnainverse_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if not fn.endswith('.fold.out'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
             
             sequence = f.readline().strip()
             structure = f.readline().strip().split()[0]
             
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def read_rnaredprint(results):
     for resdir in ['rnaredprint', 'rnaredprint_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if fn.endswith('.err'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
             
             structure = f.readline().strip()
             sequence = f.readline().strip().split()[0]
             
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def read_rnasfbinv(results):
     for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if fn.endswith('.err'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
             
             f.readline()
             sequence = f.readline().strip()
             structure = f.readline().strip()
              
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')     
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def read_dss_opt(results):
     for resdir in ['dss-opt', 'dss-opt_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if fn.endswith('.err'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
 
             for l in f:
                 l = l.strip()
@@ -157,17 +159,17 @@ def read_dss_opt(results):
                 if l.startswith('seq'):
                     sequence = l.split()[-1]    
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')  
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def read_info_rna(results):
     for resdir in ['info-rna', 'info-rna_extended']:
         results[resdir] = {}
-        for fn in os.listdir(f'/rna_design/outputs/{resdir}'):
+        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
             if fn.endswith('.err'): continue
             sequence = ''
             structure = ''
             ID = fn.split('.')[0]
-            f = open(f'/rna_design/outputs/{resdir}/{fn}', 'r')
+            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
             res_start = False
             for l in f:
                 l = l.strip()
@@ -179,7 +181,7 @@ def read_info_rna(results):
                     if l.startswith('NO_MFE:'):
                         structure = l.split()[1]    
             f.close()
-            results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')  
+            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
 def check_missing(results, algo):
     f_mis = open(f'/rna_design/results/missing_{algo}.txt', 'w')
