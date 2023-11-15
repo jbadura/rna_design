@@ -16,7 +16,7 @@ def run_desirna(indir, outdir, fn, repeats=1):
         errfile = open(f'{outdir}/{tmp}.err', 'w')
 
         command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
-        subprocess.run(command, stdout=outfile, stderr=errfile)
+        subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
         
         outfile.close()
         errfile.close()
@@ -39,7 +39,7 @@ def run_dss_opt(indir, outdir, fn, repeats=1):
         infile.close()
 
         command = ['time', '/dss-opt/opt-md', seq]
-        subprocess.run(command, stdout=outfile, stderr=errfile)
+        subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
         
         outfile.close()
         errfile.close()
@@ -60,7 +60,7 @@ def run_info_rna(indir, outdir, fn, repeats=1):
         command = ['time', '/INFO-RNA-2.1.2/INFO-RNA-2.1.2', seq]
     else:
         command = ['time', '/INFO-RNA-2.1.2/INFO-RNA-2.1.2', seq, '-R', str(repeats)]
-    subprocess.run(command, stdout=outfile, stderr=errfile)
+    subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
     
     outfile.close()
     errfile.close()
@@ -79,7 +79,7 @@ def run_mcts_rna(indir, outdir, fn, repeats=1):
     infile.close()
 
     command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', '-s', seq]
-    subprocess.run(command, stdout=outfile, stderr=errfile)
+    subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
     
     outfile.close()
     errfile.close()
@@ -99,7 +99,7 @@ def run_rnainverse(indir, outdir, fn, repeats=1):
         command = ['time', 'RNAinverse']
     else:
         command =  ['time', 'RNAinverse', f'-R{repeats}']
-    subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
+    subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=180)
     
     infile.close()
     outfile.close()
@@ -119,7 +119,7 @@ def run_rnainverse(indir, outdir, fn, repeats=1):
     infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
     
     command = ['time', 'RNAfold']
-    subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile)
+    subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=180)
     
     infile.close()
     outfile.close()
@@ -139,7 +139,7 @@ def run_rnaredprint(indir, outdir, fn, repeats=1):
     infile.close()
 
     command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', str(repeats), seq]
-    subprocess.run(command, stdout=outfile, stderr=errfile)
+    subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
     
     outfile.close()
     errfile.close()
@@ -158,7 +158,7 @@ def run_rnasfbinv(indir, outdir, fn, repeats=1):
         errfile = open(f'{outdir}/{tmp}.err', 'w')
 
         command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{fn}']
-        subprocess.run(command, stdout=outfile, stderr=errfile)
+        subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
         
         outfile.close()
         errfile.close()
