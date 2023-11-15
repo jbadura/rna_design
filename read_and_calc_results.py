@@ -232,7 +232,7 @@ def main():
         og_seq_ext = l[8]
         og_str_ext = remove_pseudoknots(l[9])
 
-        if len(fragment_structure_ext) > 100:
+        if len(og_str_ext) > 100:
             continue
 
         al_seq, al_str, res_file = results[algo][ID]
