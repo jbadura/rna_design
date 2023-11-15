@@ -201,7 +201,7 @@ def main():
         exit()
         
     try:
-        os.mkdir('results')
+        os.mkdir('/rna_design/results')
     except:
         pass
      
@@ -209,9 +209,9 @@ def main():
     POSSIBLE_ALGOS[algo](results)
     check_missing(results, algo)
     
-    f = open('data/loops_id.csv', 'r')
-    f_o = open(f'results/results_{algo}.txt', 'w')
-    f_o_ext = open(f'results/results_{algo}_ext.txt', 'w')
+    f = open('/rna_design/data/loops_id.csv', 'r')
+    f_o = open(f'/rna_design/results/results_{algo}.txt', 'w')
+    f_o_ext = open(f'/rna_design/results/results_{algo}_ext.txt', 'w')
 
     to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'rnapdist', 'seqidentity', 'rnadistance' ,'res_file', 'is_extended']
     print(';'.join(to_write), file=f_o)
