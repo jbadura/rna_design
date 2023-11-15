@@ -239,13 +239,13 @@ def main():
 
         al_seq, al_str, res_file = results[algo][ID]
         al_seq_ext, al_str_ext, res_file_ext = results[f'{algo}_extended'][ID]
-         
+
 
         rnapdist = get_rnapdist_distance(og_seq, al_seq)
         rnadistance = get_rna_distance(og_str, al_str)
         seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
         seqidentity2 = get_sequenceidentity_distance_2(og_seq, al_seq)
-        
+
         rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
         rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
         seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
