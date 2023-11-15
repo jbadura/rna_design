@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import signal
 
 def run_desirna(indir, outdir, fn, repeats=1):
     for num in range(repeats):
