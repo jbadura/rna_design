@@ -1,75 +1,38 @@
 from matplotlib import pyplot as plt
+import seaborn as sns
 import os
 
-def to_int(s):
+def try_append(l, f):
     try:
-        s = int(s)
+        l.append(float(f))
     except:
-        s = -100
-    return s
+        pass
 
+
+#ID;sequence;structure;sequence_extended;structure_extended;desirna_seqence;rnapdist_desirna_sequence;seqidentity_desirna_sequence;seqidentity2_desirna_sequence;desirna_structure;rnadistance_desirna_structure;desirna_seqence_extended;rnapdist_desirna_sequence_extended;seqidentity_desirna_sequence_extended;seqidentity2_desirna_sequence_extended;desirna_structure_extended;rnadistance_desirna_structure_extended
+#0  1        2         3                 4                  5               6                         7                            8                              9                10                            11                       12                                 13                                    14                                     15                         16
 def main():
+    f_out = open(f'results/plot_data.csv', 'w')
+    f_out_ext = open(f'results/plot_data_ext.csv', 'w')
     for fn in os.listdir('results'):
-        if '_res.' not in fn: continue
-        res = {}
-        res['sequence'] = {}
-        res['structure'] = {}
-        res['sequence_extended'] = {}
-        res['structure_extended'] = {}
-
-        
-        heatmap = [[0]*21 for _ in range(41)]
-        heatmap_ext = [[0]*21 for _ in range(41)]
-        
+        if '_res.' not in fn: continue        
+        algo = fn.split('_')[0]
         f = open(f'results/{fn}', 'r')
-        
+        header = f.readline().strip().split(';')
+
         for l in f:
             l = l.strip().split(';')
-            
-            seq_score = to_int(l[4])
-            struct_score = to_int(l[6])
-            
-            seq_ext_score = to_int(l[8])
-            struct_ext_score = to_int(l[10])
-            
-            if 0 <= seq_score + 20 <= 40 and 0 <= struct_score <= 20:
-                heatmap[seq_score + 20][struct_score] += 1
-                
-            if 0 <= seq_ext_score + 20 <= 40 and 0 <= struct_ext_score <= 20:    
-                heatmap_ext[seq_ext_score + 20][struct_ext_score] += 1
-                
-            res['sequence'][seq_score] = res['sequence'].get(seq_score, 0) + 1
-            res['structure'][struct_score] = res['structure'].get(struct_score, 0) + 1
-            
-            res['sequence_extended'][seq_ext_score] = res['sequence_extended'].get(seq_ext_score, 0) + 1
-            res['structure_extended'][struct_ext_score] = res['structure_extended'].get(struct_ext_score, 0) + 1
-            
-        
-        for mode in res:
-            fig, ax = plt.subplots()
-            
-            hist = res[mode]
-            hist = list(hist.items())
-            hist.sort()
-            
-            data = list(zip(*hist))
-            print(data[0], data[1])
-            
-            ax.bar(data[0], data[1])
-            fig.savefig(f'plots/{mode}/{fn[:-4]}.pdf')
-            plt.close(fig)
-            
-        fig, ax = plt.subplots()
-        ax.imshow(heatmap)
-        fig.savefig(f'plots/heatmaps/{fn[:-4]}.pdf')
-        plt.close(fig)
-        
-        fig, ax = plt.subplots()
-        ax.imshow(heatmap_ext)
-        fig.savefig(f'plots/heatmaps/{fn[:-4]}_ext.pdf')
-        plt.close(fig)
-        
+            rnapdist = 
+            try_append(res['rnapdist'], l[6])
+            try_append(res['seqidentity'], l[7])
+            try_append(res['rnadistance'], l[10])
 
-  
+            try_append(res['rnapdist_extended'], l[12])
+            try_append(res['seqidentity_extended'], l[13])
+            try_append(res['rnadistance_extended'],l[16])
+            
+            print(f'{ID};{algo};{rnapdist};{seqidentity};{rnadistance}', stdout=g_out)
+            print(f'{ID};{algo};{rnapdist};{seqidentity};{rnadistance', stdout=f_out_ext)
+
 main()
-        
+ 

@@ -11,3 +11,5 @@ results*
 
 results.txt
 results_extended.txt
+
+.ipynb_checkpoints/*
