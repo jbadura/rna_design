@@ -182,7 +182,7 @@ def read_info_rna(results):
             results[resdir][ID] = (sequence, structure, f'/rna_design/outputs/{resdir}/{fn}')  
 
 def check_missing(results, algo):
-    f_mis = open(f'results/missing_{algo}.txt', 'w')
+    f_mis = open(f'/rna_design/results/missing_{algo}.txt', 'w')
     for k1 in results:
         for k2 in results[k1]:
             if results[k1][k2][0] == '' or results[k1][k2][1] == '':
