@@ -250,9 +250,9 @@ def main():
         seqidentity2_ext = get_sequenceidentity_distance_2(og_seq_ext, al_seq_ext)
 
         to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnapdist, seqidentity, rnadistance, res_file, 0]
-        print(';'.join(to_write), file=f_o)
+        print(';'.join([str(x) for x in to_write]), file=f_o)
         to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, res_file_ext, 1]
-        print(';'.join(to_write), file=f_o_ext)
+        print(';'.join([str(x) for x in to_write]), file=f_o_ext)
 
     f.close()
     f_o.close()
