@@ -17,8 +17,11 @@ def run_desirna(indir, outdir, fn, repeats=1):
 
         command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
         try:
-            subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
+            p.wait(timeout=70)
+            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
         except subprocess.TimeoutExpired:
+            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
             open(f'{outdir}/{tmp}.timeouted', 'w').close()
         
         outfile.close()
@@ -43,8 +46,11 @@ def run_dss_opt(indir, outdir, fn, repeats=1):
 
         command = ['time', '/dss-opt/opt-md', seq]
         try:
-            subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
+            p.wait(timeout=70)
         except subprocess.TimeoutExpired:
+            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
             open(f'{outdir}/{tmp}.timeouted', 'w').close()
         
         outfile.close()
@@ -67,8 +73,11 @@ def run_info_rna(indir, outdir, fn, repeats=1):
     else:
         command = ['time', '/INFO-RNA-2.1.2/INFO-RNA-2.1.2', seq, '-R', str(repeats)]
     try:
-        subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+        p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
+        p.wait(timeout=70)
+        #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
     except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         open(f'{outdir}/{tmp}.timeouted', 'w').close()
     
     outfile.close()
@@ -109,8 +118,11 @@ def run_rnainverse(indir, outdir, fn, repeats=1):
     else:
         command =  ['time', 'RNAinverse', f'-R{repeats}']
     try:
-        subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
+        p.wait(timeout=70)
     except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         open(f'{outdir}/{tmp}.inv.timeouted', 'w').close()
     
     infile.close()
@@ -135,8 +147,11 @@ def run_rnainverse(indir, outdir, fn, repeats=1):
     
     command = ['time', 'RNAfold']
     try:
-        subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
+        p.wait(timeout=70)
     except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
     
     infile.close()
@@ -158,8 +173,11 @@ def run_rnaredprint(indir, outdir, fn, repeats=1):
 
     command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', str(repeats), seq]
     try:
-        subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+        #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+        p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
+        p.wait(timeout=70)
     except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         open(f'{outdir}/{tmp}.timeouted', 'w').close()
 
     outfile.close()
@@ -184,8 +202,11 @@ def run_rnaredprint(indir, outdir, fn, repeats=1):
 
     command = ['time', 'RNAfold']
     try:
-        subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
+        p.wait(timeout=70)
     except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
 
     infile.close()
@@ -207,8 +228,11 @@ def run_rnasfbinv(indir, outdir, fn, repeats=1):
 
         command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{fn}']
         try:
-            subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
+            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
+            p.wait(timeout=70)
         except subprocess.TimeoutExpired:
+            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
             open(f'{outdir}/{tmp}.timeouted', 'w').close()
             
         outfile.close()
