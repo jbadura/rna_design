@@ -262,7 +262,7 @@ def main():
                 seqidentity2 = get_sequenceidentity_distance_2(og_seq, al_seq)
                 
                 to_write = [ID, algo, og_seq, og_str, al_seq, al_str, rnapdist, seqidentity, rnadistance, res_file, test_num]
-                print(to_write, sep=';', file=f_o)
+                print(*to_write, sep=';', file=f_o)
 
         f_list.close()
     f_o.close()
