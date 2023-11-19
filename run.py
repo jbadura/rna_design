@@ -58,7 +58,7 @@ def run_dss_opt(indir, outdir, fn, repeats=1):
         errfile.close()
         
         tmp_f = open(f'{outdir}/{tmp}.out', 'r')
-        for l in f:
+        for l in tmp_f:
             l = l.strip()
             if l.startswith('vienna'):
                 structure = l.split()[-1]
