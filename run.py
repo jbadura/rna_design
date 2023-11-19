@@ -53,9 +53,40 @@ def run_dss_opt(indir, outdir, fn, repeats=1):
         except subprocess.TimeoutExpired:
             os.killpg(os.getpgid(p.pid), signal.SIGTERM)
             open(f'{outdir}/{tmp}.timeouted', 'w').close()
-        
+ 
         outfile.close()
         errfile.close()
+        
+        tmp_f = open(f'{outdir}/{tmp}.out', 'r')
+        for l in f:
+            l = l.strip()
+            if l.startswith('vienna'):
+                structure = l.split()[-1]
+            if l.startswith('seq'):
+                sequence = l.split()[-1] 
+        tmp_f.close()
+        tmp_f = open(f'{outdir}/{tmp}.stripped.out', 'w')
+        print(sequence, stdout=tmp_f)
+        tmp_f.close()
+
+        
+        outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
+        errfile = open(f'{outdir}/{tmp}.fold.err', 'w')
+        infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
+
+        command = ['time', 'RNAfold']
+        try:
+            #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
+            p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
+            p.wait(timeout=70)
+        except subprocess.TimeoutExpired:
+            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
+            open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
+
+        infile.close()
+        outfile.close()
+        errfile.close()
+        
     
 def run_info_rna(indir, outdir, fn, repeats=1):
     tmp = fn.split('.')[0]
