@@ -66,7 +66,7 @@ def run_dss_opt(indir, outdir, fn, repeats=1):
                 sequence = l.split()[-1] 
         tmp_f.close()
         tmp_f = open(f'{outdir}/{tmp}.stripped.out', 'w')
-        print(sequence, stdout=tmp_f)
+        print(sequence, file=tmp_f)
         tmp_f.close()
 
         
