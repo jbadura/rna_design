@@ -19,7 +19,7 @@ def run_desirna(indir, outdir, fn, repeats=1):
         command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
         try:
             p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-            p.wait(timeout=70)
+            p.wait(timeout=120)
             #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
         except subprocess.TimeoutExpired:
             os.killpg(os.getpgid(p.pid), signal.SIGTERM)
