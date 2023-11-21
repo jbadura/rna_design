@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def mkdir(d):
     try:
         os.mkdir(d)
@@ -16,6 +17,7 @@ def remove_pseudoknots(s):
         else:
             res.append('.')
     return ''.join(res)
+
 
 mkdir('outputs')
 mkdir('inputs')
@@ -38,12 +40,12 @@ f = open('data/loops_id.csv', 'r')
 
 for l in f:
     l = l.strip().split(',')
-    
+
     name = l[0]
-    
+
     if name == 'Source': continue
     ID = int(l[-1])
-    
+
     fragment_structure = l[6]
     fragment_structure_mod = remove_pseudoknots(fragment_structure)
     NNN = 'N' * len(fragment_structure)
@@ -92,4 +94,3 @@ for l in f:
     f.write('>sec_struct\n')
     f.write(f'{fragment_structure_ext_mod}\n')
     f.close()
-    
