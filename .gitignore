@@ -8,9 +8,12 @@ plots/*
 results2/*
 plots2/*
 results*
+logs/*
 
+run_tests.sh
 results.txt
 results_extended.txt
 
 .ipynb_checkpoints/*
 .idea/*
+__pycache__/*

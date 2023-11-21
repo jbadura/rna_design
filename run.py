@@ -1,281 +1,159 @@
 import os
 import sys
-import subprocess
-import signal
+import utils
 
-def run_desirna(indir, outdir, fn, repeats=1):
-    for num in range(repeats):
-        tmp = fn.split('.')[0]
+'''
+Run multiple time: desirna, dss-opt, rnasfbinv
+Run once: info-rna, rnainverse, rnaredprint
+'''
 
+
+def run_desirna(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
         if repeats > 1:
-            tmp = f'{tmp}_{num}'
-        
-        if os.path.isfile(f'{outdir}/{tmp}.out'):
-            continue
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
 
-        outfile = open(f'{outdir}/{tmp}.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.err', 'w')
+        command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix, timeout=80)
+        if status != 'DONE':
+            return
 
-        command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{fn}']
-        try:
-            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-            p.wait(timeout=120)
-            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
-        except subprocess.TimeoutExpired:
-            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-            open(f'{outdir}/{tmp}.timeouted', 'w').close()
-        
-        outfile.close()
-        errfile.close()
+        sequence, structure = utils.read_desirna_output(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
     
-def run_dss_opt(indir, outdir, fn, repeats=1):
-    for num in range(repeats):
-        tmp = fn.split('.')[0]
-        
+def run_dss_opt(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
         if repeats > 1:
-            tmp = f'{tmp}_{num}'
-        
-        if os.path.isfile(f'{outdir}/{tmp}.out'):
-            continue
-        
-        outfile = open(f'{outdir}/{tmp}.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.err', 'w')
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
 
-        infile = open(f'{indir}/{fn}', 'r')
+        infile = open(f'{indir}/{input_file_name}', 'r')
         seq = infile.readline().strip()
         infile.close()
 
         command = ['time', '/dss-opt/opt-md', seq]
-        try:
-            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
-            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-            p.wait(timeout=70)
-        except subprocess.TimeoutExpired:
-            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-            open(f'{outdir}/{tmp}.timeouted', 'w').close()
- 
-        outfile.close()
-        errfile.close()
-        
-        tmp_f = open(f'{outdir}/{tmp}.out', 'r')
-        for l in tmp_f:
-            l = l.strip()
-            if l.startswith('vienna'):
-                structure = l.split()[-1]
-            if l.startswith('seq'):
-                sequence = l.split()[-1] 
-        tmp_f.close()
-        tmp_f = open(f'{outdir}/{tmp}.stripped.out', 'w')
-        print(sequence, file=tmp_f)
-        tmp_f.close()
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            return
 
-        
-        outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.fold.err', 'w')
-        infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
+        sequence, structure = utils.read_dss_opt_output(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
 
-        command = ['time', 'RNAfold']
-        try:
-            #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
-            p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
-            p.wait(timeout=70)
-        except subprocess.TimeoutExpired:
-            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-            open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
 
-        infile.close()
-        outfile.close()
-        errfile.close()
-        
-    
-def run_info_rna(indir, outdir, fn, repeats=1):
-    tmp = fn.split('.')[0]
-    
-    if os.path.isfile(f'{outdir}/{tmp}.out'):
-        return
-    
-    outfile = open(f'{outdir}/{tmp}.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.err', 'w')
+def run_rnasfbinv(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
+        if repeats > 1:
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
 
-    infile = open(f'{indir}/{fn}', 'r')
+        command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            return
+
+        sequence, structure = utils.read_rnasfbinv_output(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
+
+def run_info_rna(indir, outdir, input_file_name, repeats=1):
+    output_file_name_prefix = input_file_name.split('.')[0]
+
+    infile = open(f'{indir}/{input_file_name}', 'r')
     seq = infile.readline().strip()
     infile.close()
+
     if repeats == 1:
         command = ['time', '/INFO-RNA-2.1.2/INFO-RNA-2.1.2', seq]
     else:
         command = ['time', '/INFO-RNA-2.1.2/INFO-RNA-2.1.2', seq, '-R', str(repeats)]
-    try:
-        p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-        p.wait(timeout=70)
-        #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        open(f'{outdir}/{tmp}.timeouted', 'w').close()
-    
-    outfile.close()
-    errfile.close()
-
-def run_mcts_rna(indir, outdir, fn, repeats=1):
-    tmp = fn.split('.')[0]
-    
-    if os.path.isfile(f'{outdir}/{tmp}.out'):
+    status = utils.run_command(command, outdir, output_file_name_prefix)
+    if status != 'DONE':
         return
-    
-    outfile = open(f'{outdir}/{tmp}.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.err', 'w')
 
-    infile = open(f'{indir}/{fn}', 'r')
-    seq = infile.readline().strip()
-    infile.close()
+    if repeats == 1:
+        sequence, structure = utils.read_rna_info_one(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+    else:
+        sequences, structures = utils.read_rna_info_many(outdir, f'{output_file_name_prefix}.out')
+        for test_num in range(repeats):
+            sequence, structure = sequences[test_num], structures[test_num]
+            utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}_{test_num}.fold')
+            rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}_{test_num}.fold.out')
+            utils.save_parsed_results(outdir, f'{output_file_name_prefix}_{test_num}', sequence, structure, rnafold_structure)
 
-    command = ['time', 'python2', '/MCTS-RNA/MCTS-RNA.py', '-s', seq]
-    subprocess.run(command, stdout=outfile, stderr=errfile, timeout=180)
-    
-    outfile.close()
-    errfile.close()
 
-def run_rnainverse(indir, outdir, fn, repeats=1):
-    tmp = fn.split('.')[0]
-    
-    if os.path.isfile(f'{outdir}/{tmp}.inv.out'):
-        return
-    
-    outfile = open(f'{outdir}/{tmp}.inv.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.inv.err', 'w')
-
-    infile = open(f'{indir}/{fn}', 'r')
+def run_rnainverse(indir, outdir, input_file_name, repeats=1):
+    output_file_name_prefix = input_file_name.split('.')[0]
 
     if repeats == 1:
         command = ['time', 'RNAinverse']
     else:
-        command =  ['time', 'RNAinverse', f'-R{repeats}']
-    try:
-        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
-        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
-        p.wait(timeout=70)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        open(f'{outdir}/{tmp}.inv.timeouted', 'w').close()
-    
-    infile.close()
-    outfile.close()
-    errfile.close()
-    
-    if os.path.exists(f'{outdir}/{tmp}.inv.timeouted'):
-        return
-    
-    outfile = open(f'{outdir}/{tmp}.inv.out', 'r')
-    outfile2 = open(f'{outdir}/{tmp}.stripped.out', 'w')
-    for l in outfile:
-        seq = l.strip().split()[0]
-        outfile2.write(seq + '\n')
-    outfile.close()    
-    outfile2.close()
-
-    outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.fold.err', 'w')
-
-    infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
-    
-    command = ['time', 'RNAfold']
-    try:
-        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
-        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
-        p.wait(timeout=70)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
-    
-    infile.close()
-    outfile.close()
-    errfile.close()
-
-def run_rnaredprint(indir, outdir, fn, repeats=1):
-    tmp = fn.split('.')[0]
-
-    if os.path.isfile(f'{outdir}/{tmp}.out'):
+        command = ['time', 'RNAinverse', f'-R{repeats}']
+    status = utils.run_command(command, outdir, output_file_name_prefix, input_file_full_path=f'{indir}/{input_file_name}')
+    if status != 'DONE':
         return
 
-    outfile = open(f'{outdir}/{tmp}.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.err', 'w')
+    if repeats == 1:
+        sequence, structure = utils.read_rnainverse_one(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+    else:
+        sequences, structures = utils.read_rnainverse_many(outdir, f'{output_file_name_prefix}.out')
+        for test_num in range(repeats):
+            sequence, structure = sequences[test_num], structures[test_num]
+            utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}_{test_num}.fold')
+            rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}_{test_num}.fold.out')
+            utils.save_parsed_results(outdir, f'{output_file_name_prefix}_{test_num}', sequence, structure, rnafold_structure)
 
-    infile = open(f'{indir}/{fn}', 'r')
+
+def run_rnaredprint(indir, outdir, input_file_name, repeats=1):
+    output_file_name_prefix = input_file_name.split('.')[0]
+
+    infile = open(f'{indir}/{input_file_name}', 'r')
     seq = infile.readline().strip()
     infile.close()
 
     command = ['time', '/RNARedPrint/_inst/bin/RNARedPrint', '--num', str(repeats), seq]
-    try:
-        #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
-        p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-        p.wait(timeout=70)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        open(f'{outdir}/{tmp}.timeouted', 'w').close()
-
-    outfile.close()
-    errfile.close()
-
-    if os.path.exists(f'{outdir}/{tmp}.timeouted'):
+    status = utils.run_command(command, outdir, output_file_name_prefix)
+    if status != 'DONE':
         return
 
-    outfile = open(f'{outdir}/{tmp}.out', 'r')
-    outfile.readline()
-    outfile2 = open(f'{outdir}/{tmp}.stripped.out', 'w')
-    for l in outfile:
-        seq = l.strip().split()[0]
-        outfile2.write(seq + '\n')
-    outfile.close()    
-    outfile2.close()
+    if repeats == 1:
+        sequence, structure = utils.read_rnaredprint_one(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+    else:
+        sequences, structures = utils.read_rnaredprint_many(outdir, f'{output_file_name_prefix}.out')
+        for test_num in range(repeats):
+            sequence, structure = sequences[test_num], structures[test_num]
+            utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}_{test_num}.fold')
+            rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}_{test_num}.fold.out')
+            utils.save_parsed_results(outdir, f'{output_file_name_prefix}_{test_num}', sequence, structure, rnafold_structure)
 
-    outfile = open(f'{outdir}/{tmp}.fold.out', 'w')
-    errfile = open(f'{outdir}/{tmp}.fold.err', 'w')
 
-    infile = open(f'{outdir}/{tmp}.stripped.out', 'r')
-
-    command = ['time', 'RNAfold']
-    try:
-        #subprocess.run(command, stdin=infile, stdout=outfile, stderr=errfile, timeout=70)
-        p = subprocess.Popen(command, stdin=infile, stdout=outfile, stderr=errfile, start_new_session=True)
-        p.wait(timeout=70)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        open(f'{outdir}/{tmp}.fold.timeouted', 'w').close()
-
-    infile.close()
-    outfile.close()
-    errfile.close()
-
-def run_rnasfbinv(indir, outdir, fn, repeats=1):
-    for num in range(repeats):
-        tmp = fn.split('.')[0]
-        
-        if repeats > 1:
-            tmp = f'{tmp}_{num}'
-        
-        if os.path.isfile(f'{outdir}/{tmp}.out'):
-            continue
-        
-        outfile = open(f'{outdir}/{tmp}.out', 'w')
-        errfile = open(f'{outdir}/{tmp}.err', 'w')
-
-        command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{fn}']
-        try:
-            #subprocess.run(command, stdout=outfile, stderr=errfile, timeout=70)
-            p = subprocess.Popen(command, stdout=outfile, stderr=errfile, start_new_session=True)
-            p.wait(timeout=70)
-        except subprocess.TimeoutExpired:
-            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-            open(f'{outdir}/{tmp}.timeouted', 'w').close()
-            
-        outfile.close()
-        errfile.close()
-
-ALGO = {'desirna': run_desirna, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'mcts-rna': run_mcts_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv}
+ALGO = {'desirna': run_desirna, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv}
 DIRS = {'1':
        {'desirna': [('/rna_design/inputs/desirna', '/rna_design/outputs/desirna'), ('/rna_design/inputs/desirna_extended', '/rna_design/outputs/desirna_extended')],
         'dss-opt': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/dss-opt'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/dss-opt_extended')],
         'info-rna': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/info-rna'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/info-rna_extended')],
-        'mcts-rna': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/mcts-rna'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/mcts-rna_extended')],
         'rnainverse': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnainverse'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnainverse_extended')],
         'rnaredprint': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnaredprint'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnaredprint_extended')],
         'rnasfbinv': [('/rna_design/inputs/rnasfbinv', '/rna_design/outputs/rnasfbinv'), ('/rna_design/inputs/rnasfbinv_extended', '/rna_design/outputs/rnasfbinv_extended')]},
@@ -283,28 +161,36 @@ DIRS = {'1':
         {'desirna': [('/rna_design/inputs2/desirna', '/rna_design/outputs2/desirna')],
         'dss-opt': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/dss-opt')],
         'info-rna': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/info-rna')],
-        'mcts-rna': '',
         'rnainverse': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnainverse')],
         'rnaredprint': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnaredprint')],
         'rnasfbinv': [('/rna_design/inputs2/rnasfbinv', '/rna_design/outputs2/rnasfbinv')]}
 }
 
+
 def main():
     if len(sys.argv) != 5:
         print('Usage: python3 run.py algoname start end dataset')
         exit()
-    else: 
-        run_algo = ALGO[sys.argv[1]]
-        dirs = DIRS[sys.argv[4]][sys.argv[1]]
-        range_s = int(sys.argv[2])
-        range_e = int(sys.argv[3])
-        repeats = 1 if sys.argv[4] == '1' else 10
-    
-    for indir, outdir in dirs:
-        to_do = os.listdir(indir)
-        to_do.sort()
-        to_do = to_do[range_s:range_e]
-        for fn in to_do:
-            run_algo(indir, outdir, fn, repeats=repeats)
-        
+    range_s = int(sys.argv[2])
+    range_e = int(sys.argv[3])
+    repeats = 1 if sys.argv[4] == '1' else 10
+
+    if sys.argv[1] == 'ALL':
+        algos_to_run = list(ALGO.keys())
+    else:
+        algos_to_run = [sys.argv[1]]
+
+    for algo in algos_to_run:
+        run_algo = ALGO[algo]
+        dirs = DIRS[sys.argv[4]][algo]
+
+        for indir, outdir in dirs:
+            to_do = os.listdir(indir)
+            to_do.sort()
+            to_do = to_do[range_s:range_e]
+            for fn in to_do:
+                print(f'Starting {indir}, {fn}')
+                run_algo(indir, outdir, fn, repeats=repeats)
+                print(f'Done {indir}, {fn}')
+
 main()
