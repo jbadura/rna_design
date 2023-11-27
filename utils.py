@@ -51,21 +51,21 @@ def run_command(command, outdir, output_file_name_prefix, input_file_full_path=N
     output_file = open(f'{outdir}/{output_file_name}', 'w')
     errput_file = open(f'{outdir}/{errput_file_name}', 'w')
 
+    status = 'DONE'
     try:
         p = subprocess.Popen(command, stdin=input_file, stdout=output_file, stderr=errput_file, start_new_session=True)
         p.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
         os.killpg(os.getpgid(p.pid), signal.SIGKILL)
         open(f'{outdir}/{timeout_file_name}', 'w').close()
+        status = 'TIMEOUTED'
 
     if input_file is not None:
         input_file.close()
     output_file.close()
     errput_file.close()
 
-    if os.path.isfile(f'{outdir}/{timeout_file_name}'):
-        return 'TIMEOUTED'
-    return 'DONE'
+    return status
 
 
 def read_desirna_output(outdir, file_name):
