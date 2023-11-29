@@ -37,10 +37,13 @@ def run_command(command, outdir, output_file_name_prefix, input_file_full_path=N
     output_file_name = output_file_name_prefix + '.out'
     errput_file_name = output_file_name_prefix + '.err'
     timeout_file_name = output_file_name_prefix + '.timeouted'
+    rte_file_name = output_file_name_prefix + '.rte'
 
     if skip_if_outputfile_exists and os.path.isfile(f'{outdir}/{output_file_name}'):
         if os.path.isfile(f'{outdir}/{timeout_file_name}'):
             return 'TIMEOUTED'
+        if os.path.isfile(f'{outdir}/{rte_file_name}'):
+            return 'RTE'
         return 'DONE'
 
     if input_file_full_path is not None:
@@ -60,10 +63,18 @@ def run_command(command, outdir, output_file_name_prefix, input_file_full_path=N
         open(f'{outdir}/{timeout_file_name}', 'w').close()
         status = 'TIMEOUTED'
 
+    if status != 'TIMEOUTED' and p.returncode != 0:
+        open(f'{outdir}/{rte_file_name}', 'w').close()
+        status = 'RTE'
+
     if input_file is not None:
         input_file.close()
     output_file.close()
     errput_file.close()
+
+    if status != 'TIMEOUTED' and os.stat(f'{outdir}/{output_file_name}').st_size == 0:
+        open(f'{outdir}/{rte_file_name}', 'w').close()
+        status = 'RTE'
 
     return status
 
@@ -176,25 +187,19 @@ def read_rnainverse_many(outdir, file_name):
 
 
 def read_rnaredprint_one(outdir, file_name):
-    try:
-        f = open(f'{outdir}/{file_name}', 'r')
-        structure = f.readline().strip()
-        sequence = f.readline().strip().split()[0]
-        f.close()
-        return sequence, structure
-    except:
-        return 'RTE', 'RTE'
+    f = open(f'{outdir}/{file_name}', 'r')
+    structure = f.readline().strip()
+    sequence = f.readline().strip().split()[0]
+    f.close()
+    return sequence, structure
 
 
 def read_rnaredprint_many(outdir, file_name):
-    try:
-        f = open(f'{outdir}/{file_name}', 'r')
-        structure = f.readline().strip()
-        sequences = []
-        for l in f:
-            sequence = f.readline().strip().split()[0]
-            sequences.append(sequence)
-        f.close()
-        return sequences, [structure] * len(sequences)
-    except:
-        return 'RTE', 'RTE'
+    f = open(f'{outdir}/{file_name}', 'r')
+    structure = f.readline().strip()
+    sequences = []
+    for l in f:
+        sequence = f.readline().strip().split()[0]
+        sequences.append(sequence)
+    f.close()
+    return sequences, [structure] * len(sequences)

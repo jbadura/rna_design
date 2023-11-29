@@ -137,18 +137,12 @@ def run_rnaredprint(indir, outdir, input_file_name, repeats=1):
 
     if repeats == 1:
         sequence, structure = utils.read_rnaredprint_one(outdir, f'{output_file_name_prefix}.out')
-        if sequence == 'RTE':
-            open(f'{outdir}/{output_file_name_prefix}.rte', 'w').close()
-            return
         utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
         rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
         utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
     else:
         sequences, structures = utils.read_rnaredprint_many(outdir, f'{output_file_name_prefix}.out')
         for test_num in range(repeats):
-            if sequences == 'RTE':
-                open(f'{outdir}/{output_file_name_prefix}_{test_num}.rte', 'w').close()
-                continue
             sequence, structure = sequences[test_num], structures[test_num]
             utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}_{test_num}.fold')
             rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}_{test_num}.fold.out')
