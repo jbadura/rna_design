@@ -19,7 +19,7 @@ def run_desirna(indir, outdir, input_file_name, repeats=1):
         command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{input_file_name}']
         status = utils.run_command(command, outdir, output_file_name_prefix, timeout=80)
         if status != 'DONE':
-            return
+            continue
 
         sequence, structure = utils.read_desirna_output(outdir, f'{output_file_name_prefix}.out')
         utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
@@ -42,7 +42,7 @@ def run_dss_opt(indir, outdir, input_file_name, repeats=1):
         command = ['time', '/dss-opt/opt-md', seq]
         status = utils.run_command(command, outdir, output_file_name_prefix)
         if status != 'DONE':
-            return
+            continue
 
         sequence, structure = utils.read_dss_opt_output(outdir, f'{output_file_name_prefix}.out')
         utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
@@ -61,7 +61,7 @@ def run_rnasfbinv(indir, outdir, input_file_name, repeats=1):
         command = ['time', 'python3', '/RNAsfbinv/RNAfbinvCL.py', '-f', f'{indir}/{input_file_name}']
         status = utils.run_command(command, outdir, output_file_name_prefix)
         if status != 'DONE':
-            return
+            continue
 
         sequence, structure = utils.read_rnasfbinv_output(outdir, f'{output_file_name_prefix}.out')
         utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
@@ -180,6 +180,11 @@ def main():
     else:
         algos_to_run = [sys.argv[1]]
 
+    log = open(f'/rna_design/logs/{range_s}_{sys.argv[1]}.log.out', 'w')
+    err = open(f'/rna_design/logs/{range_s}_{sys.argv[1]}.log.err', 'w')
+    sys.stdout = log
+    sys.stderr = err
+
     for algo in algos_to_run:
         run_algo = ALGO[algo]
         dirs = DIRS[sys.argv[4]][algo]
@@ -189,8 +194,9 @@ def main():
             to_do.sort()
             to_do = to_do[range_s:range_e]
             for fn in to_do:
-                print(f'Starting {indir}, {fn}')
+                print(f'Starting {indir}, {fn}', flush=True)
                 run_algo(indir, outdir, fn, repeats=repeats)
-                print(f'Done {indir}, {fn}')
+                print(f'Done {indir}, {fn}', flush=True)
+
 
 main()
