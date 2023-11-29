@@ -176,19 +176,25 @@ def read_rnainverse_many(outdir, file_name):
 
 
 def read_rnaredprint_one(outdir, file_name):
-    f = open(f'{outdir}/{file_name}', 'r')
-    structure = f.readline().strip()
-    sequence = f.readline().strip().split()[0]
-    f.close()
-    return sequence, structure
+    try:
+        f = open(f'{outdir}/{file_name}', 'r')
+        structure = f.readline().strip()
+        sequence = f.readline().strip().split()[0]
+        f.close()
+        return sequence, structure
+    except:
+        return 'RTE', 'RTE'
 
 
 def read_rnaredprint_many(outdir, file_name):
-    f = open(f'{outdir}/{file_name}', 'r')
-    structure = f.readline().strip()
-    sequences = []
-    for l in f:
-        sequence = f.readline().strip().split()[0]
-        sequences.append(sequence)
-    f.close()
-    return sequences, [structure] * len(sequences)
+    try:
+        f = open(f'{outdir}/{file_name}', 'r')
+        structure = f.readline().strip()
+        sequences = []
+        for l in f:
+            sequence = f.readline().strip().split()[0]
+            sequences.append(sequence)
+        f.close()
+        return sequences, [structure] * len(sequences)
+    except:
+        return 'RTE', 'RTE'
