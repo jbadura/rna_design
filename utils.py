@@ -39,12 +39,13 @@ def run_command(command, outdir, output_file_name_prefix, input_file_full_path=N
     timeout_file_name = output_file_name_prefix + '.timeouted'
     rte_file_name = output_file_name_prefix + '.rte'
 
-    if skip_if_outputfile_exists and os.path.isfile(f'{outdir}/{output_file_name}'):
+    if skip_if_outputfile_exists:
+        if os.path.isfile(f'{outdir}/{output_file_name_prefix}.parsed.out'):
+            return 'DONE'
         if os.path.isfile(f'{outdir}/{timeout_file_name}'):
             return 'TIMEOUTED'
         if os.path.isfile(f'{outdir}/{rte_file_name}'):
             return 'RTE'
-        return 'DONE'
 
     if input_file_full_path is not None:
         input_file = open(input_file_full_path, 'r')
