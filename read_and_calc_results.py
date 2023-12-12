@@ -86,105 +86,31 @@ def read_desirna(results):
             f.close()
             results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
-def read_rnainverse(results): 
-    for resdir in ['rnainverse', 'rnainverse_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if not fn.endswith('.fold.out'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-            
-            sequence = f.readline().strip()
-            structure = f.readline().strip().split()[0]
-            
+
+#data_dir is relative, i.e 'desirna'
+def read_dir(results, data_dir):
+    for fn in os.listdir(f'{OUTDIR}/{data_dir}'):
+        ID = fn.split('.')[0]
+        if fn.endswith('.timeouted'):
+            results[data_dir][ID] = ('TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', f'{OUTDIR}/{data_dir}/{fn}')
+        elif fn.endswith('.rte'):
+            results[data_dir][ID] = ('RTE', 'RTE', 'RTE', 'RTE', f'{OUTDIR}/{data_dir}/{fn}')
+        elif fn.endswith('.parsed.out'):
+            f = open(fn, 'r')
+            sequence = f.readline().strip().split('=')[1]
+            structure = f.readline().strip().split('=')[1]
+            rnafold = f.readline().strip().split('=')[1]
             f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
+            if sequence == 'no_sequence':
+                results[data_dir][ID] = ('TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', f'{OUTDIR}/{data_dir}/{fn}')
+            else:
+                f = open(f'{ID}.err', 'r')
+                time = float(f.readline().strip().split()[0][:-4])
+                f.close()
+                results[data_dir][ID] = (sequence, structure, rnafold, time, f'{OUTDIR}/{data_dir}/{fn}')
 
-def read_rnaredprint(results):
-    for resdir in ['rnaredprint', 'rnaredprint_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if fn.endswith('.err'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-            
-            structure = f.readline().strip()
-            sequence = f.readline().strip().split()[0]
-            
-            f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
 
-def read_rnasfbinv(results):
-    for resdir in ['rnasfbinv', 'rnasfbinv_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if fn.endswith('.err'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-            
-            f.readline()
-            sequence = f.readline().strip()
-            structure = f.readline().strip()
-             
-            f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
-
-def read_dss_opt(results):
-    for resdir in ['dss-opt', 'dss-opt_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if fn.endswith('.err'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-
-            for l in f:
-                l = l.strip()
-                if l.startswith('vienna'):
-                    structure = l.split()[-1]
-                if l.startswith('seq'):
-                    sequence = l.split()[-1]    
-            f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
-
-def read_info_rna(results):
-    for resdir in ['info-rna', 'info-rna_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if fn.endswith('.err'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-            res_start = False
-            for l in f:
-                l = l.strip()
-                if l.startswith('Local Search Results'):
-                    res_start = True
-                if res_start:
-                    if l.startswith('MFE:'):    
-                        sequence = l.split()[1]
-                    if l.startswith('NO_MFE:'):
-                        structure = l.split()[1]    
-            f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
-
-def check_missing(results, algo):
-    f_mis = open(f'/rna_design/results/missing_{algo}.txt', 'w')
-    for k1 in results:
-        for k2 in results[k1]:
-            if results[k1][k2][0] == '' or results[k1][k2][1] == '':
-                f_mis.write(f'Missing res for {k1} {k2}\n')
-    f_mis.close()
-
-POSSIBLE_ALGOS = {'desirna': read_desirna, 'rnainverse': read_rnainverse, 'rnaredprint': read_rnaredprint, 'rnasfbinv': read_rnasfbinv, 'dss-opt': read_dss_opt, 'info-rna': read_info_rna}
+POSSIBLE_ALGOS = {'desirna', 'rnainverse', 'rnaredprint', 'rnasfbinv', 'dss-opt', 'info-rna'}
 def main():
     if len(sys.argv) != 2:
         print('Give algo name')
@@ -192,7 +118,7 @@ def main():
     algo = sys.argv[1]
     if algo not in POSSIBLE_ALGOS:
         print('Wrong algo')
-        print('Possible algos:', list(POSSIBLE_ALGOS.keys()))
+        print('Possible algos:', list(POSSIBLE_ALGOS))
         exit()
         
     try:
@@ -201,14 +127,18 @@ def main():
         pass
      
     results = {}
-    POSSIBLE_ALGOS[algo](results)
-    check_missing(results, algo)
+    if algo == desirna:
+        print('dont')
+        exit()
+    
+    read_dir(results, algo)
+    read_dir(results, f'{algo}_extended'
     
     f = open('/rna_design/data/loops_id.csv', 'r')
     f_o = open(f'/rna_design/results/results_{algo}.txt', 'w')
-    f_o_ext = open(f'/rna_design/results/results_{algo}_ext.txt', 'w')
+    f_o_ext = open(f'/rna_design/results/results_{algo}_extended.txt', 'w')
 
-    to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'rnapdist', 'seqidentity', 'rnadistance' ,'res_file', 'is_extended']
+    to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'res_rnafold', 'rnapdist', 'seqidentity', 'rnadistance', 'rnadistance2rnafold' ,'res_file', 'is_extended', 'time']
     print(';'.join(to_write), file=f_o)
     print(';'.join(to_write), file=f_o_ext)
 
@@ -227,24 +157,38 @@ def main():
         og_seq_ext = l[8]
         og_str_ext = remove_pseudoknots(l[9])
 
-        if len(og_str_ext) > 100:
-            continue
+        #if len(og_str_ext) > 100:
+        #    continue
 
-        al_seq, al_str, res_file = results[algo][ID]
-        al_seq_ext, al_str_ext, res_file_ext = results[f'{algo}_extended'][ID]
+        al_seq, al_str, rnafold_str, time, res_file = results[algo][ID]
+        al_seq_ext, al_str_ext, rnafold_str_ext, time_ext, res_file_ext = results[f'{algo}_extended'][ID]
 
+    
+        if al_seq not in ['TIMEOUTED', 'RTE']:
+            rnapdist = get_rnapdist_distance(og_seq, al_seq)
+            seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
+            rnadistance = get_rna_distance(og_str, al_str)
+            rnadistance2rnafold = get_rna_distance(og_str, rnafold_str)
+        else:
+            rnapdist = 0
+            seqidentity = 0
+            rnadistance = 0
+            rnadistance2rnafold = 0
+        
+        if al_seq not in ['TIMEOUTED', 'RTE']:
+            rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
+            seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
+            rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
+            rnadistance2rnafold_ext = get_rna_distance(og_str_ext, rnafold_str_ext)
+        else:
+            rnapdist_ext = 0
+            seqidentity_ext = 0
+            rnadistance_ext = 0
+            rnadistance2rnafold_ext = 0
 
-        rnapdist = get_rnapdist_distance(og_seq, al_seq)
-        rnadistance = get_rna_distance(og_str, al_str)
-        seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
-
-        rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
-        rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
-        seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
-
-        to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnapdist, seqidentity, rnadistance, res_file, 0]
+        to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnafold_str, rnapdist, seqidentity, rnadistance, rnadistance2rnafold, res_file, 0, time]
         print(';'.join([str(x) for x in to_write]), file=f_o)
-        to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, res_file_ext, 1]
+        to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnafold_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, rnadistance2rnafold_ext, res_file_ext, 1, time_ext]
         print(';'.join([str(x) for x in to_write]), file=f_o_ext)
 
     f.close()
