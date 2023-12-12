@@ -127,7 +127,7 @@ def main():
         pass
      
     results = {}
-    if algo == desirna:
+    if algo == 'desirna':
         print('dont')
         exit()
     
