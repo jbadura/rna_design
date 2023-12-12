@@ -106,7 +106,12 @@ def read_dir(results, data_dir):
                 results[data_dir][ID] = ('TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', f'{OUTDIR}/{data_dir}/{fn}')
             else:
                 f = open(f'{OUTDIR}/{data_dir}/{ID}.err', 'r')
-                time = float(f.readline().strip().split()[0][:-4])
+                try:
+                    time = float(f.readline().strip().split()[0][:-4])
+                except:
+                    print('WRONG TIME')
+                    print(f'{OUTDIR}/{data_dir}/{ID}.err')
+                    exit()
                 f.close()
                 results[data_dir][ID] = (sequence, structure, rnafold, time, f'{OUTDIR}/{data_dir}/{fn}')
 
