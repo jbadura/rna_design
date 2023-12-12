@@ -56,7 +56,14 @@ def get_rna_distance(str1, str2):
     tmp_f = open('tmp.out', 'r')
     line = tmp_f.readline()
     line = line.strip().split()
-    return line[-1]
+    try:
+        return line[-1]
+    except:
+        print(str1)
+        print(str2)
+        print(line)
+        print('-----')
+        exit()
 
 def remove_pseudoknots(s):
     res = []
