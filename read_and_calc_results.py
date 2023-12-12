@@ -89,6 +89,7 @@ def read_desirna(results):
 
 #data_dir is relative, i.e 'desirna'
 def read_dir(results, data_dir):
+    results[data_dir] = {}
     for fn in os.listdir(f'{OUTDIR}/{data_dir}'):
         ID = fn.split('.')[0]
         if fn.endswith('.timeouted'):
