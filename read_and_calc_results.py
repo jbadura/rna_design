@@ -97,7 +97,7 @@ def read_dir(results, data_dir):
         elif fn.endswith('.rte'):
             results[data_dir][ID] = ('RTE', 'RTE', 'RTE', 'RTE', f'{OUTDIR}/{data_dir}/{fn}')
         elif fn.endswith('.parsed.out'):
-            f = open(fn, 'r')
+            f = open(f'{OUTDIR}/{data_dir}/{fn}', 'r')
             sequence = f.readline().strip().split('=')[1]
             structure = f.readline().strip().split('=')[1]
             rnafold = f.readline().strip().split('=')[1]
@@ -105,7 +105,7 @@ def read_dir(results, data_dir):
             if sequence == 'no_sequence':
                 results[data_dir][ID] = ('TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', f'{OUTDIR}/{data_dir}/{fn}')
             else:
-                f = open(f'{ID}.err', 'r')
+                f = open(f'{OUTDIR}/{data_dir}/{ID}.err', 'r')
                 time = float(f.readline().strip().split()[0][:-4])
                 f.close()
                 results[data_dir][ID] = (sequence, structure, rnafold, time, f'{OUTDIR}/{data_dir}/{fn}')
