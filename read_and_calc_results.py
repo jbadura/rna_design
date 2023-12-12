@@ -132,7 +132,7 @@ def main():
         exit()
     
     read_dir(results, algo)
-    read_dir(results, f'{algo}_extended'
+    read_dir(results, f'{algo}_extended')
     
     f = open('/rna_design/data/loops_id.csv', 'r')
     f_o = open(f'/rna_design/results/results_{algo}.txt', 'w')
