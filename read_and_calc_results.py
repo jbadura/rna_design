@@ -20,13 +20,6 @@ def get_sequenceidentity_distance_1(seq1, seq2):
 
     return sum([a==b for a,b in zip(seq1, seq2)])/len(seq1)
 
-def get_sequenceidentity_distance_2(seq1, seq2):
-    if len(seq1) != len(seq2):
-        return 'NA'
-    return 'NA'
-    LOOKUP = {'A': 1, 'U': 1, 'G': 2, 'C': 2, '?': 3}
-    return sum([LOOKUP[a]==LOOKUP[b] for a,b in zip(seq1, seq2)])/len(seq1)
-
 def get_rnapdist_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -244,12 +237,10 @@ def main():
         rnapdist = get_rnapdist_distance(og_seq, al_seq)
         rnadistance = get_rna_distance(og_str, al_str)
         seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
-        seqidentity2 = get_sequenceidentity_distance_2(og_seq, al_seq)
 
         rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
         rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
         seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
-        seqidentity2_ext = get_sequenceidentity_distance_2(og_seq_ext, al_seq_ext)
 
         to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnapdist, seqidentity, rnadistance, res_file, 0]
         print(';'.join([str(x) for x in to_write]), file=f_o)

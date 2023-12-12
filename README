@@ -1,25 +1,33 @@
-0. The commands should be run in the docker.
-1. add_ids.py to the loops.csv file. The id is the last field.
-2. prepare_data.py creates inputs and outputs direcotry and puts data in apropriate direcotry for each program. Characters other than () are changed to '.'.
-2.5 same as above for data in data2 dir.
+Run prepare_data.py to create input directory with appropriate files.
+It also creates output directories.
 
-3. run_rnasfbinv.py runs command (https://github.com/matandro/RNAsfbinv)
+run.py executes appropriate commands for each rnadesign program.
+For each id.in file we create the following:
+id.out - output of the program
+id.err - error stream of the program
+id.fold.out - result of rnafold on output of the program
+id.fold.err - error stream of rnafold
+id.parsed.out - file with result sequence, structure, and rnafold structure
+id.timeouted - this file is created instead of id.parsed.out if the program did not finish in time
+id.rte - this file is created if the program crashed or the id.out file is empty
+
+RNAsfbinv (https://github.com/matandro/RNAsfbinv)
+Command:
 python3 /RNAsfbinv/RNAfbinvCL.py -f infile 1> outfile 2> errfile
-for each file in inputs/rnasfbinv and saves the results in outputs/rnasfbinv 
 Example infile
 TARGET_STRUCTURE=(.....(((((((((.....(((((.(....).)))))......))))))))).........)
 TARGET_SEQUENCE=NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
-4. run_rnainverse.py runs command (https://www.tbi.univie.ac.at/RNA/RNAinverse.1.html)
+RNAinverse (https://www.tbi.univie.ac.at/RNA/RNAinverse.1.html)
+Command:
 RNAinverse < infile 1> outfile 2> errfile
-for each file in inputs/rnainverse and saves the results in outputs/rnainverse 
 Example infile
 (.....(((((((((.....(((((.(....).)))))......))))))))).........)
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
-5. run_desirna.py runs command (https://github.com/fryzjergda/DesiRNA) 
+DesiRNA (https://github.com/fryzjergda/DesiRNA)
+Command:
 python3 /DesiRNA/DesiRNA.py -f' infile 1> outfile 2> errfile
-for each file in inputs/desirna and saves the results in outputs/desirna 
 Example infile
 >name
 name_6
@@ -28,18 +36,14 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 >sec_struct
 (.....(((((((((.....(((((.(....).)))))......))))))))).........)
 
-6. run_rnaredprint.py runs command (https://github.com/yannponty/RNARedPrint)
+RNARedPrint (https://github.com/yannponty/RNARedPrint)
+Command:
 /RNARedPrint/_inst/bin/RNARedPrint --num 1 seq 1> outfile 2> errfile
-where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/rnaredprint
 
-7. run_dss-opt.py runs command (https://github.com/marcom/dss-opt)
+dss-opt (https://github.com/marcom/dss-opt)
+Command:
 /dss-opt/opt-md seq 1> outfile 2> errfile
-where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/dss-opt
 
-8. run_info-rna.py runs command (https://github.com/BackofenLab/INFO-RNA)
+INFO-RNA (https://github.com/BackofenLab/INFO-RNA
+Command:
 /INFO-RNA-2.1.2/INFO-RNA-2.1.2 seq 1> outfile 2> errfile
-where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/info-rna
-
-9. run_mcts-rna.py runs command
-python2 /MCTS-RNA/MCTS-RNA.py seq 1> outfile 2> errfile
-where seq is the first line from infile in inputs/rnainverse and saves the results in outputs/mcts-rna
