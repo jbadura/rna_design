@@ -42,6 +42,8 @@ def get_rnapdist_distance(seq1, seq2):
 def get_rna_distance(str1, str2):
     if len(str1) != len(str2):
         return 'NA'
+    if str1 == 'no_structure' or str2 == 'no_structure':
+        return 'NA'
 
     tmp_f = open('tmp.in', 'w')
     tmp_f.write(f'{str1}\n{str2}')
