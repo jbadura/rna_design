@@ -44,11 +44,6 @@ def get_rna_distance(str1, str2):
         return 'NA'
     if str1 == 'no_structure' or str2 == 'no_structure':
         return 'NA'
-        
-    if str1 == 'TIMEOUTED' or str2 == 'TIMEOUTED':
-        return 'NA'
-    if str1 == 'TIMEOUTED2' or str2 == 'TIMEOUTED2':
-        return 'NA' 
 
     tmp_f = open('tmp.in', 'w')
     tmp_f.write(f'{str1}\n{str2}')
@@ -187,7 +182,7 @@ def main():
         al_seq_ext, al_str_ext, rnafold_str_ext, time_ext, res_file_ext = results[f'{algo}_extended'][ID]
 
     
-        if al_seq not in ['TIMEOUTED', 'RTE']:
+        if al_seq not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
             rnapdist = get_rnapdist_distance(og_seq, al_seq)
             seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
             rnadistance = get_rna_distance(og_str, al_str)
@@ -198,7 +193,7 @@ def main():
             rnadistance = 0
             rnadistance2rnafold = 0
         
-        if al_seq not in ['TIMEOUTED', 'RTE']:
+        if al_seq not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
             rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
             seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
             rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
