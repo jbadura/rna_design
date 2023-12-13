@@ -2,6 +2,7 @@ Run prepare_data.py to create input directory with appropriate files.
 It also creates output directories.
 
 run.py executes appropriate commands for each rnadesign program.
+For each algorithm we also execute rnafold on the resulting sequence.
 For each id.in file we create the following:
 id.out - output of the program
 id.err - error stream of the program
@@ -47,3 +48,13 @@ Command:
 INFO-RNA (https://github.com/BackofenLab/INFO-RNA
 Command:
 /INFO-RNA-2.1.2/INFO-RNA-2.1.2 seq 1> outfile 2> errfile
+
+
+read_and_calc_results.py calculated the following metrics:
+Sequence Identity - how many characters from the output sequence match the input sequence divided by sequence length
+RNApdist - calculated between input sequence and output sequence
+RNAdistance - calculated between input structure and structure obtained from RNAfold on output structure
+
+https://www.tbi.univie.ac.at/RNA/RNApdist.1.html
+https://www.tbi.univie.ac.at/RNA/RNAdistance.1.html
+https://www.tbi.univie.ac.at/RNA/RNAfold.1.html
