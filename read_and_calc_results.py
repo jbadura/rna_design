@@ -144,11 +144,7 @@ def main():
     except:
         pass
      
-    results = {}
-    if algo == 'desirna':
-        print('dont')
-        exit()
-    
+    results = {}    
     read_dir(results, algo)
     read_dir(results, f'{algo}_extended')
     
