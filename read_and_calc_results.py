@@ -44,6 +44,11 @@ def get_rna_distance(str1, str2):
         return 'NA'
     if str1 == 'no_structure' or str2 == 'no_structure':
         return 'NA'
+        
+    if str1 == 'TIMEOUTED' or str2 == 'TIMEOUTED':
+        return 'NA'
+    if str1 == 'TIMEOUTED2' or str2 == 'TIMEOUTED2':
+        return 'NA' 
 
     tmp_f = open('tmp.in', 'w')
     tmp_f.write(f'{str1}\n{str2}')
