@@ -36,7 +36,7 @@ mkdir(f'outputs/info-rna_extended/')
 mkdir(f'outputs/dss-opt/')
 mkdir(f'outputs/dss-opt_extended/')
 
-f = open('data/loops_id.csv', 'r')
+f = open('data/loops_v2_id.csv', 'r')
 
 for l in f:
     l = l.strip().split(',')

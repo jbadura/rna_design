@@ -10,6 +10,8 @@ algo_names = {'rnainverse': 'RNAinverse', 'info-rna': 'INFO-RNA', 'dss-opt': 'DS
 
 algos = ['RNAinverse', 'RNAfbinv', 'INFO-RNA', 'RNARedPrint', 'DSS-Opt', 'DesiRNA']
 
+MY_PAL = {'RNAinverse': 'g', 'RNAfbinv': 'b', 'INFO-RNA': 'm',
+          'RNARedPrint': 'r', 'DSS-Opt': 'y', 'DesiRNA': 'c'}
 
 def rename():
     f_in = open("results/plots_data.csv", 'r')
@@ -22,7 +24,10 @@ def rename():
             l[9] = 'Sequence Identity'
             l[8] = 'RNApdist'
             l[11] = 'RNAdistance'
+            l.append('len')
             first_line = False
+        else:
+            l.append(len(l[3]))
         print(*l, sep=';', file=f_out)
     f_in.close()
     f_out.close()
@@ -47,20 +52,26 @@ def draw_plots(df, dataset, part, is_extended):
 
     if not os.path.exists(f'plots/{dataset}'):
         os.mkdir(f'plots/{dataset}')
+    # if not os.path.exists(f'plots/{dataset}/separated'):
+    #     os.mkdir(f'plots/{dataset}/separated')
 
-    for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance']:
+    #my_order = df.groupby(by=["Algorithm"])["RNAdistance_divided"].median().sort_values().iloc[::-1].index
+    my_order = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint']
+    for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
         fig, ax = plt.subplots()
-        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax)
+        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, order=my_order)
+        if yax != 'Sequence Identity':
+            ax.set_ylabel(f'{yax} (less is better)')
         fig.savefig(f'plots/{dataset}/{part}_{yax}{suffix}.pdf', dpi=600)
         plt.close(fig)
 
-    for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance']:
-        for algo in algos:
-            fig, ax = plt.subplots()
-            tmp_df = df[df['Algorithm'] == algo]
-            sns.violinplot(data=tmp_df, y=yax, x="Algorithm", ax=ax)
-            fig.savefig(f'plots/{dataset}/{part}_{yax}_{algo}{suffix}.pdf', dpi=600)
-            plt.close(fig)
+    # for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance']:
+    #     for algo in algos:
+    #         fig, ax = plt.subplots()
+    #         tmp_df = df[df['Algorithm'] == algo]
+    #         sns.violinplot(data=tmp_df, y=yax, x="Algorithm", ax=ax)
+    #         fig.savefig(f'plots/{dataset}/separated/{part}_{yax}_{algo}{suffix}.pdf', dpi=600)
+    #         plt.close(fig)
 
     stats = open(f'plots/{dataset}/{part}{suffix}.stats', 'w')
     print('Algorithm', '#solved', 'Tot. time', 'Avg. time', sep='\t', file=stats)
@@ -83,6 +94,9 @@ for is_extended in [0, 1]:
     filtered = filtered[filtered['res_sequence'] != 'TIMEOUTED2']
     _all = filtered[filtered['res_sequence'] != 'RTE']
 
+    _all['Normalized RNAdistance'] = _all['RNAdistance'] / _all['len']
+    print(_all)
+
     draw_plots(_all, 'all', 'all', is_extended)
     internalloop = _all[_all['type'] == 'Internal loop']
     draw_plots(internalloop, 'all', 'interloops', is_extended)
@@ -98,7 +112,7 @@ for is_extended in [0, 1]:
 
     common_ids = set()
     for algo in algos:
-        tmp_data = filtered[filtered['Algorithm'] == algo]
+        tmp_data = _all[_all['Algorithm'] == algo]
         if len(common_ids) == 0:
             common_ids = set(tmp_data['ID'])
         else:
