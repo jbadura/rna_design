@@ -185,6 +185,7 @@ def main():
     sys.stderr = err
 
     for algo in algos_to_run:
+        if algo == 'desirna': continue
         run_algo = ALGO[algo]
         dirs = DIRS[algo]
         for indir, outdir in dirs:
