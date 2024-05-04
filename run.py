@@ -150,22 +150,13 @@ def run_rnaredprint(indir, outdir, input_file_name, repeats=1):
 
 
 ALGO = {'desirna': run_desirna, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv}
-DIRS = {'1':
-       {'desirna': [('/rna_design/inputs/desirna', '/rna_design/outputs/desirna'), ('/rna_design/inputs/desirna_extended', '/rna_design/outputs/desirna_extended')],
-        'dss-opt': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/dss-opt'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/dss-opt_extended')],
-        'info-rna': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/info-rna'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/info-rna_extended')],
-        'rnainverse': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnainverse'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnainverse_extended')],
-        'rnaredprint': [('/rna_design/inputs/rnainverse', '/rna_design/outputs/rnaredprint'), ('/rna_design/inputs/rnainverse_extended', '/rna_design/outputs/rnaredprint_extended')],
-        'rnasfbinv': [('/rna_design/inputs/rnasfbinv', '/rna_design/outputs/rnasfbinv'), ('/rna_design/inputs/rnasfbinv_extended', '/rna_design/outputs/rnasfbinv_extended')]},
-        '2':
-        {'desirna': [('/rna_design/inputs2/desirna', '/rna_design/outputs2/desirna')],
-        'dss-opt': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/dss-opt')],
-        'info-rna': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/info-rna')],
-        'rnainverse': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnainverse')],
-        'rnaredprint': [('/rna_design/inputs2/rnainverse', '/rna_design/outputs2/rnaredprint')],
-        'rnasfbinv': [('/rna_design/inputs2/rnasfbinv', '/rna_design/outputs2/rnasfbinv')]}
+DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extended')],
+        'dss-opt': [('rnainverse', 'dss-opt'), ('rnainverse_extended', 'dss-opt_extended')],
+        'info-rna': [('rnainverse', 'info-rna'), ('rnainverse_extended', 'info-rna_extended')],
+        'rnainverse': [('rnainverse', 'rnainverse'), ('rnainverse_extended', 'rnainverse_extended')],
+        'rnaredprint': [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnaredprint_extended')],
+        'rnasfbinv': [('rnasfbinv', 'rnasfbinv'), ('rnasfbinv_extended', 'rnasfbinv_extended')]
 }
-
 
 def main():
     if len(sys.argv) != 5:
@@ -173,23 +164,33 @@ def main():
         exit()
     range_s = int(sys.argv[2])
     range_e = int(sys.argv[3])
-    repeats = 1 if sys.argv[4] == '1' else 10
+    dataset = sys.argv[4]
+    if dataset.endswith('/'):
+        dataset = dataset[:-1]
+    if dataset.startswith('inputs_'):
+        dataset = dataset[7:]
+    repeats = 1
+
+    INPUT_PREF = f'/rna_design/inputs_{dataset}/'
+    OUTPUT_PREF = f'/rna_design/outputs_{dataset}/'
 
     if sys.argv[1] == 'ALL':
         algos_to_run = list(ALGO.keys())
     else:
         algos_to_run = [sys.argv[1]]
 
-    log = open(f'/rna_design/logs/{range_s}_{sys.argv[1]}.log.out', 'w')
-    err = open(f'/rna_design/logs/{range_s}_{sys.argv[1]}.log.err', 'w')
+    log = open(f'/rna_design/logs/{dataset}_{range_s}_{range_e}_{sys.argv[1]}.log.out', 'w')
+    err = open(f'/rna_design/logs/{dataset}_{range_s}_{range_e}_{sys.argv[1]}.log.err', 'w')
     sys.stdout = log
     sys.stderr = err
 
     for algo in algos_to_run:
         run_algo = ALGO[algo]
-        dirs = DIRS[sys.argv[4]][algo]
-
+        dirs = DIRS[algo]
         for indir, outdir in dirs:
+            indir = INPUT_PREF + indir
+            outdir = OUTPUT_PREF + outdir
+            
             to_do = os.listdir(indir)
             to_do.sort()
             to_do = to_do[range_s:range_e]
