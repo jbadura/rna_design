@@ -3,6 +3,8 @@ inputs/*
 outputs2/*
 inputs2/*
 outputs_sample/*
+inputs_rfam_RF01739_id/*
+outputs_rfam_RF01739_id/*
 
 results/*
 plots/*

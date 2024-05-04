@@ -1,5 +1,6 @@
 import os
 import sys
+import csv
 
 
 def mkdir(d):
@@ -18,10 +19,22 @@ def remove_pseudoknots(s):
             res.append('.')
     return ''.join(res)
 
+if len(sys.argv) == 2:
+    file_name = sys.argv[1]
+    if file_name.endswith('.csv'):
+        file_name = file_name[:-4]
+    if '/' in file_name:
+        file_name = file_name.split('/')[-1]
+    suff = f'_{file_name}'
+else:
+    print('Provide file name from "data" dir.')
 
-mkdir('outputs')
-mkdir('inputs')
-for s in ['inputs', 'outputs']:
+INPUTS = f'inputs{suff}'
+OUTPUTS = f'outputs{suff}'
+
+mkdir(OUTPUTS)
+mkdir(INPUTS)
+for s in [INPUTS, OUTPUTS]:
     mkdir(f'{s}/desirna/')
     mkdir(f'{s}/desirna_extended/')
     mkdir(f'{s}/rnainverse/')
@@ -29,55 +42,64 @@ for s in ['inputs', 'outputs']:
     mkdir(f'{s}/rnasfbinv/')
     mkdir(f'{s}/rnasfbinv_extended/')
 
-mkdir(f'outputs/rnaredprint/')
-mkdir(f'outputs/rnaredprint_extended/')
-mkdir(f'outputs/info-rna/')
-mkdir(f'outputs/info-rna_extended/')
-mkdir(f'outputs/dss-opt/')
-mkdir(f'outputs/dss-opt_extended/')
+mkdir(f'{OUTPUTS}/rnaredprint/')
+mkdir(f'{OUTPUTS}/rnaredprint_extended/')
+mkdir(f'{OUTPUTS}/info-rna/')
+mkdir(f'{OUTPUTS}/info-rna_extended/')
+mkdir(f'{OUTPUTS}/dss-opt/')
+mkdir(f'{OUTPUTS}/dss-opt_extended/')
 
-f = open('data/loops_v2_id.csv', 'r')
+csv_file = open(f'data/{file_name}.csv', 'r')
+csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
 
-for l in f:
-    l = l.strip().split(',')
+if 'rfam' in file_name:
+    shift = 1
+else:
+    shift = 0
+
+for l in csv_reader:
 
     name = l[0]
 
-    if name == 'Source': continue
+    if name == 'Source' or name == 'Family':
+        if l[-1] != 'id':
+            print('Last column of provided file must be "id"')
+            exit(0)
+        continue
     ID = int(l[-1])
 
-    fragment_structure = l[6]
+    fragment_structure = l[6+shift]
     fragment_structure_mod = remove_pseudoknots(fragment_structure)
     NNN = 'N' * len(fragment_structure)
     
-    fragment_structure_ext = l[9]
+    fragment_structure_ext = l[9+shift]
     fragment_structure_ext_mod = remove_pseudoknots(fragment_structure_ext)
     NNN_ext = 'N' * len(fragment_structure_ext)
 
     ##### RNA inverse (also used for RNARedPrint, dss-opt, and info-rna) #####
-    f = open(f'inputs/rnainverse/{ID}.in', 'w')
+    f = open(f'{INPUTS}/rnainverse/{ID}.in', 'w')
     f.write(f'{fragment_structure_mod}\n')
     f.write(f'{NNN}\n')
     f.close()
 
-    f = open(f'inputs/rnainverse_extended/{ID}.in', 'w')
+    f = open(f'{INPUTS}/rnainverse_extended/{ID}.in', 'w')
     f.write(f'{fragment_structure_ext_mod}\n')
     f.write(f'{NNN_ext}\n')
     f.close()
 
     ##### RNA sfbinv #####
-    f = open(f'inputs/rnasfbinv/{ID}.in', 'w')
+    f = open(f'{INPUTS}/rnasfbinv/{ID}.in', 'w')
     f.write(f'TARGET_STRUCTURE={fragment_structure_mod}\n')
     f.write(f'TARGET_SEQUENCE={NNN}\n')
     f.close()
 
-    f = open(f'inputs/rnasfbinv_extended/{ID}.in', 'w')
+    f = open(f'{INPUTS}/rnasfbinv_extended/{ID}.in', 'w')
     f.write(f'TARGET_STRUCTURE={fragment_structure_ext_mod}\n')
     f.write(f'TARGET_SEQUENCE={NNN_ext}\n')
     f.close()
 
     ##### Desi RNA #####
-    f = open(f'inputs/desirna/{ID}.in', 'w')
+    f = open(f'{INPUTS}/desirna/{ID}.in', 'w')
     f.write('>name\n')
     f.write(f'name_{ID}\n')
     f.write('>seq_restr\n')
@@ -86,7 +108,7 @@ for l in f:
     f.write(f'{fragment_structure_mod}\n')
     f.close()
 
-    f = open(f'inputs/desirna_extended/{ID}.in', 'w')
+    f = open(f'{INPUTS}/desirna_extended/{ID}.in', 'w')
     f.write('>name\n')
     f.write(f'name_{ID}\n')
     f.write('>seq_restr\n')
