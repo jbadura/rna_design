@@ -16,7 +16,7 @@ def run_desirna(indir, outdir, input_file_name, repeats=1):
         else:
             output_file_name_prefix = f'{ID}'
 
-        command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-f', f'{indir}/{input_file_name}']
+        command = ['time', 'python3', '/DesiRNA/DesiRNA.py', '-r', '1', '-f', f'{indir}/{input_file_name}']
         status = utils.run_command(command, outdir, output_file_name_prefix, timeout=80)
         if status != 'DONE':
             continue
