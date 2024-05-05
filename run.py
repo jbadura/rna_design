@@ -179,13 +179,17 @@ def main():
     else:
         algos_to_run = [sys.argv[1]]
 
+    try:
+        os.mkdir('/rna_design/logs')
+    except:
+        pass
+
     log = open(f'/rna_design/logs/{dataset}_{range_s}_{range_e}_{sys.argv[1]}.log.out', 'w')
     err = open(f'/rna_design/logs/{dataset}_{range_s}_{range_e}_{sys.argv[1]}.log.err', 'w')
     sys.stdout = log
     sys.stderr = err
 
     for algo in algos_to_run:
-        if algo == 'desirna': continue
         run_algo = ALGO[algo]
         dirs = DIRS[algo]
         for indir, outdir in dirs:
