@@ -83,7 +83,7 @@ def run_command(command, outdir, output_file_name_prefix, input_file_full_path=N
 def read_desirna_output(outdir, file_name):
     f = open(f'{outdir}/{file_name}', 'r')
     line = f.readline().strip()
-    while not line.startswith('Target solution:') and not line.startswith('Best solution:'):
+    while not line.startswith('Target structure:') and not line.startswith('Best solution:'):
         line = f.readline().strip()
     sequence = f.readline().strip()
     nop = f.readline().strip()
