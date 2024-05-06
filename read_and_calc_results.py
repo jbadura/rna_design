@@ -143,7 +143,7 @@ def main():
     read_dir(results, outdir, algo)
     read_dir(results, outdir, f'{algo}_extended')
 
-    csv_file = open('/rna_design/data/{dataset}.csv', 'r')
+    csv_file = open(f'/rna_design/data/{dataset}.csv', 'r')
     csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
     f_o = open(f'{resdir}/results_{algo}.txt', 'w')
     f_o_ext = open(f'{resdir}/results_{algo}_extended.txt', 'w')
