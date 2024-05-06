@@ -179,10 +179,12 @@ def main():
 
     
         if al_seq not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
+            print(f'Calc stats for {ID} {algo}')
             rnapdist = get_rnapdist_distance(og_seq, al_seq)
             seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
             rnadistance = get_rna_distance(og_str, al_str)
             rnadistance2rnafold = get_rna_distance(og_str, rnafold_str)
+            print(f'Done for {ID} {algo}')
         else:
             rnapdist = 0
             seqidentity = 0
@@ -190,10 +192,12 @@ def main():
             rnadistance2rnafold = 0
         
         if al_seq not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
+            print(f'Calc stats for {ID} {algo}_extended')
             rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
             seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
             rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
             rnadistance2rnafold_ext = get_rna_distance(og_str_ext, rnafold_str_ext)
+            print(f'Done for {ID} {algo}_extended')
         else:
             rnapdist_ext = 0
             seqidentity_ext = 0
@@ -205,7 +209,8 @@ def main():
         to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnafold_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, rnadistance2rnafold_ext, res_file_ext, 1, time_ext]
         print(';'.join([str(x) for x in to_write]), file=f_o_ext)
 
-    f.close()
+    csv_file.close()
     f_o.close()
+    f_o_ext.close()
 
 main()
