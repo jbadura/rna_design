@@ -2,6 +2,7 @@ import os
 import sys
 from minineedle import needle
 import subprocess
+import csv
 
 def get_needlewunsh_distance(seq1, seq2):
     if len(seq1) != len(seq2):
