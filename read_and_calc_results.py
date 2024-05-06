@@ -122,7 +122,7 @@ def main():
         dataset = dataset[:-1]
     if dataset.startswith('inputs_'):
         dataset = dataset[7:]
-    if dataset.startwith('outputs_'):
+    if dataset.startswith('outputs_'):
         dataset = dataset[8:]
 
     if 'rfam' in dataset:
