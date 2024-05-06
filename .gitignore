@@ -1,21 +1,23 @@
 outputs/*
 inputs/*
-outputs2/*
-inputs2/*
-outputs_sample/*
 inputs_rfam_RF01739_id/*
 outputs_rfam_RF01739_id/*
+outputs_loops_v2_id/*
+inputs_loops_v2_id/*
 
 results/*
 plots/*
-results2/*
-plots2/*
-results*
+results_rfam_RF01739_id/*
+plots_rfam_RF01739_id/*
+results_loops_v2_id/*
+plots_loops_v2_id/*
+
 logs/*
+dockerhelpers/*
+sbatch_*
+slurm_logs/*
 
 run_tests.sh
-results.txt
-results_extended.txt
 
 .ipynb_checkpoints/*
 .idea/*
