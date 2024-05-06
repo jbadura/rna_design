@@ -3,8 +3,6 @@ import sys
 from minineedle import needle
 import subprocess
 
-OUTDIR = '/rna_design/outputs'
-
 def get_needlewunsh_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -76,45 +74,26 @@ def remove_pseudoknots(s):
             res.append('.')
     return ''.join(res)
 
-def read_desirna(results):
-    for resdir in ['desirna', 'desirna_extended']:
-        results[resdir] = {}
-        for fn in os.listdir(f'{OUTDIR}/{resdir}'):
-            if fn.endswith('.err'): continue
-            sequence = ''
-            structure = ''
-            ID = fn.split('.')[0]
-            f = open(f'{OUTDIR}/{resdir}/{fn}', 'r')
-            line = f.readline().strip()
-            while not line.startswith('Closest solution:') and not line.startswith('Best solution:'):
-                line = f.readline().strip()
-                
-            sequence = f.readline().strip()
-            structure = f.readline().strip()
-            
-            f.close()
-            results[resdir][ID] = (sequence, structure, f'{OUTDIR}/{resdir}/{fn}')
-
-
-#data_dir is relative, i.e 'desirna'
-def read_dir(results, data_dir):
-    results[data_dir] = {}
-    for fn in os.listdir(f'{OUTDIR}/{data_dir}'):
+#outdir is in docker, i.e /rna_design/outputs_suffix
+#algodir is relative, i.e 'desirna'
+def read_dir(results, outdir, algodir):
+    results[algodir] = {}
+    for fn in os.listdir(f'{outdir}/{algodir}'):
         ID = fn.split('.')[0]
         if fn.endswith('.timeouted'):
-            results[data_dir][ID] = ('TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', f'{OUTDIR}/{data_dir}/{fn}')
+            results[algodir][ID] = ('TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', 'TIMEOUTED', f'{outdir}/{algodir}/{fn}')
         elif fn.endswith('.rte'):
-            results[data_dir][ID] = ('RTE', 'RTE', 'RTE', 'RTE', f'{OUTDIR}/{data_dir}/{fn}')
+            results[algodir][ID] = ('RTE', 'RTE', 'RTE', 'RTE', f'{outdir}/{algodir}/{fn}')
         elif fn.endswith('.parsed.out'):
-            f = open(f'{OUTDIR}/{data_dir}/{fn}', 'r')
+            f = open(f'{outdir}/{algodir}/{fn}', 'r')
             sequence = f.readline().strip().split('=')[1]
             structure = f.readline().strip().split('=')[1]
             rnafold = f.readline().strip().split('=')[1]
             f.close()
             if sequence == 'no_sequence':
-                results[data_dir][ID] = ('TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', f'{OUTDIR}/{data_dir}/{fn}')
+                results[algodir][ID] = ('TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', 'TIMEOUTED2', f'{outdir}/{algodir}/{fn}')
             else:
-                f = open(f'{OUTDIR}/{data_dir}/{ID}.err', 'r')
+                f = open(f'{outdir}/{algodir}/{ID}.err', 'r')
                 time = -1
                 try:
                     for timeline in f:
@@ -122,35 +101,51 @@ def read_dir(results, data_dir):
                             time = float(timeline.strip().split()[0][:-4])
                 except:
                     print('WRONG TIME')
-                    print(f'{OUTDIR}/{data_dir}/{ID}.err')
+                    print(f'{outdir}/{algodir}/{ID}.err')
                     exit()
                 f.close()
-                results[data_dir][ID] = (sequence, structure, rnafold, time, f'{OUTDIR}/{data_dir}/{fn}')
+                results[algodir][ID] = (sequence, structure, rnafold, time, f'{outdir}/{algodir}/{fn}')
 
 
 POSSIBLE_ALGOS = {'desirna', 'rnainverse', 'rnaredprint', 'rnasfbinv', 'dss-opt', 'info-rna'}
 def main():
-    if len(sys.argv) != 2:
-        print('Give algo name')
+    if len(sys.argv) != 3:
+        print('Usage: python3 read_and_calc_results.py algo_name dataset')
         exit()
     algo = sys.argv[1]
     if algo not in POSSIBLE_ALGOS:
         print('Wrong algo')
         print('Possible algos:', list(POSSIBLE_ALGOS))
         exit()
-        
+    dataset = sys.argv[2]
+    if dataset.endswith('/'):
+        dataset = dataset[:-1]
+    if dataset.startswith('inputs_'):
+        dataset = dataset[7:]
+    if dataset.startwith('outputs_'):
+        dataset = dataset[8:]
+
+    if 'rfam' in dataset:
+        shift = 1
+    else:
+        shift = 0
+
+    # outdir - dir with algo outputs
+    # resdir - dir to save parsed data to
+    outdir = f'/rna_design/outputs_{dataset}'
+    resdir = f'/rna_design/results_{dataset}'
     try:
-        os.mkdir('/rna_design/results')
+        os.mkdir(resdir)
     except:
         pass
-     
+
     results = {}    
-    read_dir(results, algo)
-    read_dir(results, f'{algo}_extended')
+    read_dir(results, outdir, algo)
+    read_dir(results, outdir, f'{algo}_extended')
     
-    f = open('/rna_design/data/loops_id.csv', 'r')
-    f_o = open(f'/rna_design/results/results_{algo}.txt', 'w')
-    f_o_ext = open(f'/rna_design/results/results_{algo}_extended.txt', 'w')
+    f = open('/rna_design/data/{dataset}.csv', 'r')
+    f_o = open(f'{resdir}/results_{algo}.txt', 'w')
+    f_o_ext = open(f'{resdir}/results_{algo}_extended.txt', 'w')
 
     to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'res_rnafold', 'rnapdist', 'seqidentity', 'rnadistance', 'rnadistance2rnafold' ,'res_file', 'is_extended', 'time']
     print(';'.join(to_write), file=f_o)
@@ -159,17 +154,21 @@ def main():
     for l in f:
         l = l.strip().split(',')
 
-        name = l[0]
-        typee = l[1]
+        name = l[0+shift]
+        typee = l[1+shift]
 
-        if name == 'Source': continue
+        if name == 'Source' or name == 'Family':
+            if l[-1] != 'id':
+                print('Last column of provided file must be "id"')
+                exit(0)
+            continue
         ID = l[-1]
 
-        og_seq = l[5]
-        og_str = remove_pseudoknots(l[6])
+        og_seq = l[5+shift]
+        og_str = remove_pseudoknots(l[6+shift])
 
-        og_seq_ext = l[8]
-        og_str_ext = remove_pseudoknots(l[9])
+        og_seq_ext = l[8+shift]
+        og_str_ext = remove_pseudoknots(l[9+shift])
 
         #if len(og_str_ext) > 100:
         #    continue
