@@ -142,8 +142,9 @@ def main():
     results = {}    
     read_dir(results, outdir, algo)
     read_dir(results, outdir, f'{algo}_extended')
-    
-    f = open('/rna_design/data/{dataset}.csv', 'r')
+
+    csv_file = open('/rna_design/data/{dataset}.csv', 'r')
+    csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
     f_o = open(f'{resdir}/results_{algo}.txt', 'w')
     f_o_ext = open(f'{resdir}/results_{algo}_extended.txt', 'w')
 
@@ -151,10 +152,9 @@ def main():
     print(';'.join(to_write), file=f_o)
     print(';'.join(to_write), file=f_o_ext)
 
-    for l in f:
-        l = l.strip().split(',')
+    for l in csv_reader:
 
-        name = l[0+shift]
+        name = l[0]
         typee = l[1+shift]
 
         if name == 'Source' or name == 'Family':
