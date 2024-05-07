@@ -18,7 +18,7 @@ sbatch_*
 slurm_logs/*
 
 run_tests.sh
-
+rna_design_plots.zip
 .ipynb_checkpoints/*
 .idea/*
 __pycache__/*

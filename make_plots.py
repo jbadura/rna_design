@@ -3,6 +3,7 @@ import seaborn as sns
 import pandas as pd
 import os
 import csv
+import sys
 
 ####### PLOT PARAMS #######
 plt.rcParams['figure.figsize'] = [8, 8]
@@ -75,7 +76,7 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     my_order = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint']
     for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
         fig, ax = plt.subplots()
-        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, order=my_order)
+        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, hue="Algorithm", legend=False, order=my_order)
         if yax != 'Sequence Identity':
             ax.set_ylabel(f'{yax} (less is better)')
         fig.savefig(f'plots_{main_dataset}/{dataset}/{part}_{yax}{suffix}.pdf', dpi=600)
@@ -101,8 +102,10 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
 
 def main():
     main_dataset = sys.argv[1]
+    if not os.path.exists(f'plots_{main_dataset}'):
+        os.mkdir(f'plots_{main_dataset}')
     rename(main_dataset)
-    data = pd.read_csv("results_{main_dataset}/plots_data_renamed.csv", sep=';')
+    data = pd.read_csv(f"results_{main_dataset}/plots_data_renamed.csv", sep=';')
     nopk = get_nopk(main_dataset)
 
     for is_extended in [0, 1]:
@@ -148,3 +151,6 @@ def main():
         draw_plots(internalloop, 'intersection_nopk', 'interloops', is_extended, main_dataset)
         other = intersection_nopk[intersection_nopk['type'] != 'Internal loop']
         draw_plots(other, 'intersection_nopk', 'others', is_extended, main_dataset)
+
+
+main()
