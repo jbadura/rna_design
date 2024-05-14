@@ -191,7 +191,7 @@ def main():
             rnadistance = 0
             rnadistance2rnafold = 0
         
-        if al_seq not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
+        if al_seq_ext not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
             print(f'Calc stats for {ID} {algo}_extended')
             rnapdist_ext = get_rnapdist_distance(og_seq_ext, al_seq_ext)
             seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
