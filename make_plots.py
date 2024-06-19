@@ -91,13 +91,31 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     #         plt.close(fig)
 
     stats = open(f'plots_{main_dataset}/{dataset}/{part}{suffix}.stats', 'w')
-    print('Algorithm', '#solved', 'Tot. time', 'Avg. time', sep='\t', file=stats)
+
+    line = ['Algorithm', '#solved', 'Tot. time', 'Avg. time']
+    for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
+        for tmp_name in ['Min', 'Max', 'Avg.', 'Median']:
+            line.append(f'{stat} - {tmp_name}')
+    print(*line, sep='\t', file=stats)
+
+    line = []
     for algo in algos:
         tmp_data = df[df['Algorithm'] == algo]
         size = len(tmp_data)
         tot_time = pd.to_numeric(tmp_data['time']).sum()
-        avg_time = tot_time / size
-        print(f'{algo}\t{size}\t{tot_time:.2f}\t{avg_time:.2f}', file=stats)
+        if size == 0:
+            avg_time = 0
+        else:
+            avg_time = tot_time / size
+        line = [algo, size, f'{tot_time:.2f}', f'{avg_time:.2f}']
+
+        for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
+            line.append(f'{pd.to_numeric(tmp_data[stat]).min():.2f}')
+            line.append(f'{pd.to_numeric(tmp_data[stat]).max():.2f}')
+            line.append(f'{pd.to_numeric(tmp_data[stat]).mean():.2f}')
+            line.append(f'{pd.to_numeric(tmp_data[stat]).median():.2f}')
+
+        print(*line, sep='\t', file=stats)
     stats.close()
 
 def main():
@@ -122,6 +140,10 @@ def main():
         draw_plots(internalloop, 'all', 'interloops', is_extended, main_dataset)
         other = _all[_all['type'] != 'Internal loop']
         draw_plots(other, 'all', 'others', is_extended, main_dataset)
+        junk3 = _all[_all['type'] == '3-way junction']
+        draw_plots(junk3, 'all', '3wayjunk', is_extended, main_dataset)
+        junk4 = _all[_all['type'] == '4-way junction']
+        draw_plots(junk4, 'all', '4wayjunk', is_extended, main_dataset)
 
         _all_nopk = _all[_all['ID'].isin(nopk)]
         draw_plots(_all_nopk, 'all_nopk', 'all', is_extended, main_dataset)
@@ -129,6 +151,10 @@ def main():
         draw_plots(internalloop, 'all_nopk', 'interloops', is_extended, main_dataset)
         other = _all_nopk[_all_nopk['type'] != 'Internal loop']
         draw_plots(other, 'all_nopk', 'others', is_extended, main_dataset)
+        junk3 = _all_nopk[_all_nopk['type'] == '3-way junction']
+        draw_plots(junk3, 'all_nopk', '3wayjunk', is_extended, main_dataset)
+        junk4 = _all_nopk[_all_nopk['type'] == '4-way junction']
+        draw_plots(junk4, 'all_nopk', '4wayjunk', is_extended, main_dataset)
 
         common_ids = set()
         for algo in algos:
@@ -144,6 +170,10 @@ def main():
         draw_plots(internalloop, 'intersection', 'interloops', is_extended, main_dataset)
         other = intersection[intersection['type'] != 'Internal loop']
         draw_plots(other, 'intersection', 'others', is_extended, main_dataset)
+        junk3 = intersection[intersection['type'] == '3-way junction']
+        draw_plots(junk3, 'intersection', '3wayjunk', is_extended, main_dataset)
+        junk4 = intersection[intersection['type'] == '4-way junction']
+        draw_plots(junk4, 'intersection', '4wayjunk', is_extended, main_dataset)
 
         intersection_nopk = intersection[intersection['ID'].isin(nopk)]
         draw_plots(intersection_nopk, 'intersection_nopk', 'all', is_extended, main_dataset)
@@ -151,6 +181,10 @@ def main():
         draw_plots(internalloop, 'intersection_nopk', 'interloops', is_extended, main_dataset)
         other = intersection_nopk[intersection_nopk['type'] != 'Internal loop']
         draw_plots(other, 'intersection_nopk', 'others', is_extended, main_dataset)
+        junk3 = intersection_nopk[intersection_nopk['type'] == '3-way junction']
+        draw_plots(junk3, 'intersection_nopk', '3wayjunk', is_extended, main_dataset)
+        junk4 = intersection_nopk[intersection_nopk['type'] == '4-way junction']
+        draw_plots(junk4, 'intersection_nopk', '4wayjunk', is_extended, main_dataset)
 
 
 main()
