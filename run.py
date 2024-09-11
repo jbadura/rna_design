@@ -149,7 +149,7 @@ def run_rnaredprint(indir, outdir, input_file_name, repeats=1):
             utils.save_parsed_results(outdir, f'{output_file_name_prefix}_{test_num}', sequence, structure, rnafold_structure)
 
 
-ALGO = {'desirna': run_desirna, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv}
+ALGO = {'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv, 'desirna': run_desirna}
 DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extended')],
         'dss-opt': [('rnainverse', 'dss-opt'), ('rnainverse_extended', 'dss-opt_extended')],
         'info-rna': [('rnainverse', 'info-rna'), ('rnainverse_extended', 'info-rna_extended')],
