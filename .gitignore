@@ -4,6 +4,8 @@ inputs_rfam_RF01739_id/*
 outputs_rfam_RF01739_id/*
 outputs_loops_v2_id/*
 inputs_loops_v2_id/*
+inputs_loops_v3_id/*
+outputs_loops_v3_id/*
 
 results/*
 plots/*
@@ -11,6 +13,8 @@ results_rfam_RF01739_id/*
 plots_rfam_RF01739_id/*
 results_loops_v2_id/*
 plots_loops_v2_id/*
+results_loops_v3_id/*
+plots_loops_v3_id/*
 
 logs/*
 dockerhelpers/*
