@@ -16,6 +16,11 @@ plots_loops_v2_id/*
 results_loops_v3_id/*
 plots_loops_v3_id/*
 
+inputs_rfam_RF01739_v2_id/*
+outputs_rfam_RF01739_v2_id/*
+results_rfam_RF01739_v2_id/*
+plots_rfam_RF01739_v2_id/*
+
 logs/*
 dockerhelpers/*
 sbatch_*
