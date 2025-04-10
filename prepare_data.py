@@ -41,6 +41,10 @@ for s in [INPUTS, OUTPUTS]:
     mkdir(f'{s}/rnainverse_extended/')
     mkdir(f'{s}/rnasfbinv/')
     mkdir(f'{s}/rnasfbinv_extended/')
+    mkdir(f'{s}/ribologic/')
+    mkdir(f'{s}/ribologic_extended/')
+    mkdir(f'{s}/learna/')
+    mkdir(f'{s}/learna_extended/')
 
 mkdir(f'{OUTPUTS}/rnaredprint/')
 mkdir(f'{OUTPUTS}/rnaredprint_extended/')
@@ -116,3 +120,32 @@ for l in csv_reader:
     f.write('>sec_struct\n')
     f.write(f'{fragment_structure_ext_mod}\n')
     f.close()
+    
+    ##### RiboLogic #####
+    f = open(f'{INPUTS}/ribologic/{ID}.in', 'w')
+    f.write(f'-sequence\n')
+    f.write(f'{NNN}\n')
+    f.write('>single\n')
+    f.write(f'{fragment_structure_mod}\n')
+    xxx = 'x' * len(NNN)
+    f.write(f'{xxx}\n')
+    f.close()
+    
+    f = open(f'{INPUTS}/ribologic_extended/{ID}.in', 'w')
+    f.write(f'-sequence\n')
+    f.write(f'{NNN_ext}\n')
+    f.write('>single\n')
+    f.write(f'{fragment_structure_ext_mod}\n')
+    xxx = 'x' * len(NNN_ext)
+    f.write(f'{xxx}\n')
+    f.close()
+    
+    ##### LeaRNA #####
+    f = open(f'{INPUTS}/learna/{ID}.in', 'w')
+    f.write(f'{fragment_structure_mod}\n')
+    f.close()
+    
+    f = open(f'{INPUTS}/learna_extended//{ID}.in', 'w')
+    f.write(f'{fragment_structure_ext_mod}\n')
+    f.close()
+    

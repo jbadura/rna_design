@@ -149,13 +149,95 @@ def run_rnaredprint(indir, outdir, input_file_name, repeats=1):
             utils.save_parsed_results(outdir, f'{output_file_name_prefix}_{test_num}', sequence, structure, rnafold_structure)
 
 
-ALGO = {'dss-opt': run_dss_opt, 'info-rna': run_info_rna, 'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv, 'desirna': run_desirna}
+def run_ribologic(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
+        if repeats > 1:
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
+
+        command = ['time', 'python2.7', '/RiboLogic/design_sequence.py', '-m', 'nupack', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            continue
+
+        sequence, structure = utils.read_ribologic(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
+
+def run_learna(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
+        if repeats > 1:
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
+
+        command = ['time', 'utils/execution_scripts/LEARNA.sh', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            continue
+
+        sequence, structure = utils.read_learna(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
+
+def run_metalearna(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
+        if repeats > 1:
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
+
+        command = ['time', 'utils/execution_scripts/Meta-LEARNA.sh', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            continue
+
+        sequence, structure = utils.read_learna(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
+
+def run_metalearnaadapt(indir, outdir, input_file_name, repeats=1):
+    for test_num in range(repeats):
+        ID = input_file_name.split('.')[0]
+        if repeats > 1:
+            output_file_name_prefix = f'{ID}_{test_num}'
+        else:
+            output_file_name_prefix = f'{ID}'
+
+        command = ['time', 'utils/execution_scripts/Meta-LEARNA-Adapt.sh', f'{indir}/{input_file_name}']
+        status = utils.run_command(command, outdir, output_file_name_prefix)
+        if status != 'DONE':
+            continue
+
+        sequence, structure = utils.read_learna(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+
+
+ALGO = {'ribologic': run_ribologic, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna,
+        'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv, 'desirna': run_desirna,
+        'learna': run_learna, 'metalearna': run_metalearna, 'metalernaadapt': run_metalearnaadapt}
 DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extended')],
         'dss-opt': [('rnainverse', 'dss-opt'), ('rnainverse_extended', 'dss-opt_extended')],
         'info-rna': [('rnainverse', 'info-rna'), ('rnainverse_extended', 'info-rna_extended')],
         'rnainverse': [('rnainverse', 'rnainverse'), ('rnainverse_extended', 'rnainverse_extended')],
         'rnaredprint': [('rnainverse', 'rnaredprint'), ('rnainverse_extended', 'rnaredprint_extended')],
-        'rnasfbinv': [('rnasfbinv', 'rnasfbinv'), ('rnasfbinv_extended', 'rnasfbinv_extended')]
+        'rnasfbinv': [('rnasfbinv', 'rnasfbinv'), ('rnasfbinv_extended', 'rnasfbinv_extended')],
+        'ribologic': [('ribologic', 'ribologic'), ('ribologic_extended', 'ribologic_extended')],
+        'learna': [('learna', 'learna'), ('learna_extended','learna_extended')],
+        'metalearna': [('learna', 'metalearna'), ('learna_extended', 'metalearna_extended')],
+        'metalearnaadapt': [('learna', 'metalearnaadapt'), ('learna_extended', 'metalearnaadapt_extended')]
 }
 
 def main():

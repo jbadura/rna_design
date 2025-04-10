@@ -205,3 +205,17 @@ def read_rnaredprint_many(outdir, file_name):
         sequences.append(sequence)
     f.close()
     return sequences, [structure] * len(sequences)
+
+
+#TODO don't know output format, expect all to timeout
+def read_ribologic(outdir, file_name):
+    sequence = 'no_sequence'
+    structure = 'no_structure'
+    return sequence, structure
+
+
+#TODO don't know output format, expect all to timeout
+def read_learna(outdir, file_name):
+    sequence = 'no_sequence'
+    structure = 'no_structure'
+    return sequence, structure
