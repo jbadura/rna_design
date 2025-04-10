@@ -59,4 +59,17 @@ RUN wget http://www.bioinf.uni-freiburg.de/Software/antaRNA/antaRNA_v114.py
 
 RUN pip3 install minineedle
 
+# install RiboLogic
+RUN pip2 install networkx numpy matplotlib requests networkx
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt -y update && apt install -y python-tk
+RUN git clone https://github.com/wuami/RiboLogic.git
+ENV VIENNAHOME=/usr/local
+ENV NUPACKHOME=/RiboLogic/resources/nupack
+
+# install LEARNA
+RUN git clone https://github.com/automl/learna.git
+RUN cd learna && make requirements
+
+
 WORKDIR /rna_workdir
