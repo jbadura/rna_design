@@ -8,11 +8,13 @@ import sys
 ####### PLOT PARAMS #######
 plt.rcParams['figure.figsize'] = [8, 8]
 
-algo_names = {'rnainverse': 'RNAinverse', 'info-rna': 'INFO-RNA', 'dss-opt': 'DSS-Opt',
+ALGO_NAMES = {'rnainverse': 'RNAinverse', 'info-rna': 'INFO-RNA', 'dss-opt': 'DSS-Opt',
               'rnasfbinv': 'RNAfbinv', 'rnaredprint': 'RNARedPrint', 'desirna': 'DesiRNA',
               'algo': 'Algorithm'}
 
-algos = ['RNAinverse', 'RNAfbinv', 'INFO-RNA', 'RNARedPrint', 'DSS-Opt', 'DesiRNA']
+ALGOS = ['RNAinverse', 'RNAfbinv', 'INFO-RNA', 'RNARedPrint', 'DSS-Opt', 'DesiRNA']
+ALGO_ORDER = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint']
+
 
 MY_PAL = {'RNAinverse': 'g', 'RNAfbinv': 'b', 'INFO-RNA': 'm',
           'RNARedPrint': 'r', 'DSS-Opt': 'y', 'DesiRNA': 'c'}
@@ -24,7 +26,7 @@ def rename(main_dataset):
     first_line = True
     for l in f_in:
         l = l.strip().split(';')
-        l.append(algo_names[l[1]])
+        l.append(ALGO_NAMES[l[1]])
         if first_line:
             l[9] = 'Sequence Identity'
             l[8] = 'RNApdist'
@@ -72,11 +74,9 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     # if not os.path.exists(f'plots_{main_dataset}/{dataset}/separated'):
     #     os.mkdir(f'plots_{main_dataset}/{dataset}/separated')
 
-    #my_order = df.groupby(by=["Algorithm"])["RNAdistance_divided"].median().sort_values().iloc[::-1].index
-    my_order = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint']
     for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
         fig, ax = plt.subplots()
-        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, hue="Algorithm", legend=False, order=my_order)
+        sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, hue="Algorithm", legend=False, order=ALGO_ORDER)
         if yax != 'Sequence Identity':
             ax.set_ylabel(f'{yax} (less is better)')
         fig.savefig(f'plots_{main_dataset}/{dataset}/{part}_{yax}{suffix}.pdf', dpi=600)
@@ -99,7 +99,7 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     print(*line, sep='\t', file=stats)
 
     line = []
-    for algo in algos:
+    for algo in ALGOS:
         tmp_data = df[df['Algorithm'] == algo]
         size = len(tmp_data)
         tot_time = pd.to_numeric(tmp_data['time']).sum()
@@ -125,6 +125,10 @@ def main():
     rename(main_dataset)
     data = pd.read_csv(f"results_{main_dataset}/plots_data_renamed.csv", sep=';')
     nopk = get_nopk(main_dataset)
+
+    # data = data[data['Algorithm'] != 'RNAfbinv']
+    # ALGOS.remove('RNAfbinv')
+    # ALGO_ORDER.remove('RNAfbinv')
 
     for is_extended in [0, 1]:
         filtered = data[data['is_extended'] == is_extended]
@@ -157,7 +161,7 @@ def main():
         draw_plots(junk4, 'all_nopk', '4wayjunk', is_extended, main_dataset)
 
         common_ids = set()
-        for algo in algos:
+        for algo in ALGOS:
             tmp_data = _all[_all['Algorithm'] == algo]
             if len(common_ids) == 0:
                 common_ids = set(tmp_data['ID'])

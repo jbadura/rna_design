@@ -21,6 +21,13 @@ outputs_rfam_RF01739_v2_id/*
 results_rfam_RF01739_v2_id/*
 plots_rfam_RF01739_v2_id/*
 
+big_reports/
+combine_big_csv.py
+plots_rfam_RF00009_id/
+plots_rfam_RF02681_id/
+results_rfam_RF00009_id/
+results_rfam_RF02681_id/
+
 logs/*
 dockerhelpers/*
 sbatch_*
