@@ -39,16 +39,36 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
 RNARedPrint (https://github.com/yannponty/RNARedPrint)
 Command:
-/RNARedPrint/_inst/bin/RNARedPrint --num 1 seq 1> outfile 2> errfile
+/RNARedPrint/_inst/bin/RNARedPrint --num 1 struct 1> outfile 2> errfile
+
+Command:
+echo struct | design-multistate.py --num 100 --gc 0.6 --tolerance=0.5 1> outfile 2> errfile
+Take sequence with smallest E1
+
+Command:
+echo struct > tmp.txt && design-multistate.py -i tmp.txt --num 100 | calcprobs.py -i tmp.txt 1> outfile 2> errfile
+Take sequence with highest Psum, lowest MFE
 
 dss-opt (https://github.com/marcom/dss-opt)
 Command:
-/dss-opt/opt-md seq 1> outfile 2> errfile
+/dss-opt/opt-md struct 1> outfile 2> errfile
 
 INFO-RNA (https://github.com/BackofenLab/INFO-RNA
 Command:
-/INFO-RNA-2.1.2/INFO-RNA-2.1.2 seq 1> outfile 2> errfile
+/INFO-RNA-2.1.2/INFO-RNA-2.1.2 struct 1> outfile 2> errfile
 
+LeaRNA (https://github.com/automl/learna)
+Command:
+/LeaRNA/utils/execution_scripts/LEARNA.sh infile 1> outfile 2> errfile
+
+Command:
+/LeaRNA/utils/execution_scripts/Meta-LEARNA.sh infile 1> outfile 2> errfile
+
+Command:
+/LeaRNA/utils/execution_scripts/Meta-LEARNA-Adapt.sh infile 1> outfile 2> errfile
+
+Example infile
+(.....(((((((((.....(((((.(....).)))))......))))))))).........)
 
 read_and_calc_results.py calculated the following metrics:
 Sequence Identity - how many characters from the output sequence match the input sequence divided by sequence length
