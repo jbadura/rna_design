@@ -284,7 +284,7 @@ DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extend
         'metalearna': [('learna', 'metalearna'), ('learna_extended', 'metalearna_extended')],
         'metalearnaadapt': [('learna', 'metalearnaadapt'), ('learna_extended', 'metalearnaadapt_extended')],
         'rnaredprint_designmultistate': [('rnainverse', 'rnaredprint_designmultistate'), ('rnainverse_extended', 'rnaredprint_designmultistate_extended')],
-        'rnaredprint_calcprobs' [('rnainverse', 'rnaredprint_calcprobs'), ('rnainverse_extended', 'rnaredprint_calcprobs_extended')]:
+        'rnaredprint_calcprobs': [('rnainverse', 'rnaredprint_calcprobs'), ('rnainverse_extended', 'rnaredprint_calcprobs_extended')]:
 }
 
 def main():
