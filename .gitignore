@@ -37,6 +37,8 @@ results_rfam_RF02681_id/
 
 logs/*
 dockerhelpers/*
+dockerhelpers_old/*
+test_*
 sbatch_*
 slurm_logs/*
 

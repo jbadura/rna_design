@@ -71,5 +71,7 @@ ENV NUPACKHOME=/RiboLogic/resources/nupack
 RUN git clone https://github.com/automl/learna.git
 RUN cd learna && make requirements
 
+RUN pip3 install scipy
 
-WORKDIR /rna_workdir
+# learna has to run from learna dir
+WORKDIR /learna

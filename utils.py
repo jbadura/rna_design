@@ -214,8 +214,10 @@ def read_ribologic(outdir, file_name):
     return sequence, structure
 
 
-#TODO don't know output format, expect all to timeout
 def read_learna(outdir, file_name):
-    sequence = 'no_sequence'
+    f = open(f'{outdir}/{file_name}', 'r')
+    for l in f:
+        sequence = l.strip().split()[-1]
+    f.close()
     structure = 'no_structure'
     return sequence, structure
