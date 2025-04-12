@@ -221,3 +221,44 @@ def read_learna(outdir, file_name):
     f.close()
     structure = 'no_structure'
     return sequence, structure
+
+
+def read_rnaredprint_designmultistate_one(outdir, file_name):
+    f = open(f'{outdir}/{file_name}', 'r')
+    res_seq = ''
+    res_energy = 9999999999999999999999999999999999999999999999999
+    for l in f:
+        l = l.strip().split()
+        if len(l) != 3 or not l[2].startswith('E1'):
+            continue
+            
+        e1 = float(l[2].split('=')[1])
+        seq = l[1]
+        res_energy, res_seq = min((res_energy, res_seq), (e1, seq))
+            
+    structure = 'no_structure'
+    f.close()
+    return res_seq, structure
+
+
+def read_rnaredprint_calcprobs_one(outdir, file_name):
+    f = open(f'{outdir}/{file_name}', 'r')
+    res_seq = ''
+    res_mfe = 9999999999999999999999999999999999999999999999999
+    res_psum = -999999999999999999999999999999999999999999999999
+    for l in f:
+        l = l.strip().split()
+        if len(l) != 7 or not l[6].startswith('Psum') or not l[3].startswith('MFE'):
+            continue
+        
+        psum = float(l[6].split('=')[1])
+        mfe = float(l[3].split('=')[1])
+        seq = l[1]
+        if res_psum < psum:
+            res_psum, res_mfe, res_seq = psum, mfe, seq
+        elif res_psum == psum and res_mfe > mfe:
+            res_psum, res_mfe, res_seq = psum, mfe, seq
+            
+    structure = 'no_structure'
+    f.close()
+    return res_seq, structure

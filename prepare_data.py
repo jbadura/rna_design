@@ -48,6 +48,10 @@ for s in [INPUTS, OUTPUTS]:
 
 mkdir(f'{OUTPUTS}/rnaredprint/')
 mkdir(f'{OUTPUTS}/rnaredprint_extended/')
+mkdir(f'{OUTPUTS}/rnaredprint_designmultistate/')
+mkdir(f'{OUTPUTS}/rnaredprint_designmultistate_extended/')
+mkdir(f'{OUTPUTS}/rnaredprint_calcprobs/')
+mkdir(f'{OUTPUTS}/rnaredprint_calcprobs_extended/')
 mkdir(f'{OUTPUTS}/info-rna/')
 mkdir(f'{OUTPUTS}/info-rna_extended/')
 mkdir(f'{OUTPUTS}/dss-opt/')
