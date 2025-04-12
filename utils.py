@@ -225,7 +225,7 @@ def read_learna(outdir, file_name):
 
 def read_rnaredprint_designmultistate_one(outdir, file_name):
     f = open(f'{outdir}/{file_name}', 'r')
-    res_seq = ''
+    res_seq = 'no_sequence'
     res_energy = 9999999999999999999999999999999999999999999999999
     for l in f:
         l = l.strip().split()
@@ -243,7 +243,7 @@ def read_rnaredprint_designmultistate_one(outdir, file_name):
 
 def read_rnaredprint_calcprobs_one(outdir, file_name):
     f = open(f'{outdir}/{file_name}', 'r')
-    res_seq = ''
+    res_seq = 'no_sequence'
     res_mfe = 9999999999999999999999999999999999999999999999999
     res_psum = -999999999999999999999999999999999999999999999999
     for l in f:
