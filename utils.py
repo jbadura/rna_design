@@ -233,7 +233,7 @@ def read_rnaredprint_designmultistate_one(outdir, file_name):
             continue
             
         e1 = float(l[2].split('=')[1])
-        seq = l[1]
+        seq = l[0]
         res_energy, res_seq = min((res_energy, res_seq), (e1, seq))
             
     structure = 'no_structure'
@@ -253,7 +253,7 @@ def read_rnaredprint_calcprobs_one(outdir, file_name):
         
         psum = float(l[6].split('=')[1])
         mfe = float(l[3].split('=')[1])
-        seq = l[1]
+        seq = l[0]
         if res_psum < psum:
             res_psum, res_mfe, res_seq = psum, mfe, seq
         elif res_psum == psum and res_mfe > mfe:
