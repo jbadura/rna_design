@@ -272,7 +272,7 @@ def run_metalearnaadapt(indir, outdir, input_file_name, repeats=1):
 ALGO = {'ribologic': run_ribologic, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna,
         'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv, 'desirna': run_desirna,
         'learna': run_learna, 'metalearna': run_metalearna, 'metalearnaadapt': run_metalearnaadapt,
-        'rnaredprint_designmultistate': , run_rnaredprint_designmultistate, 'rnaredprint_calcprobs': run_rnaredprint_calcprobs}
+        'rnaredprint_designmultistate': run_rnaredprint_designmultistate, 'rnaredprint_calcprobs': run_rnaredprint_calcprobs}
 DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extended')],
         'dss-opt': [('rnainverse', 'dss-opt'), ('rnainverse_extended', 'dss-opt_extended')],
         'info-rna': [('rnainverse', 'info-rna'), ('rnainverse_extended', 'info-rna_extended')],
