@@ -73,10 +73,10 @@ RUN cd learna && make requirements
 
 RUN pip3 install scipy
 ENV PATH=/RNARedPrint/_inst/bin:$PATH
-RUN echo "echo -e \"${1}\" | design-multistate.py --num 100 --gc 0.6 --tolerance=0.5" > /RNARedPrint/design-multistate-helper
+RUN echo "echo -e \"\${1}\" | design-multistate.py --num 100 --gc 0.6 --tolerance=0.5" > /RNARedPrint/design-multistate-helper
 RUN chmod +x /RNARedPrint/design-multistate-helper
-RUN "echo \"${1}\" > tmp.targets.txt && design-multistate.py -i tmp.targets.txt --num 100 | calcprobs.py -i tmp.targets.txt" > /RNARedPrint/calcprobs-helper
-
+RUN echo "echo \"\${1}\" > tmp.targets.txt && design-multistate.py -i tmp.targets.txt --num 100 | calcprobs.py -i tmp.targets.txt" > /RNARedPrint/calcprobs-helper
+RUN chmod +x /RNARedPrint/calcprobs-helper
 
 # learna has to run from learna dir
 WORKDIR /learna
