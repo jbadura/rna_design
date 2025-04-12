@@ -4,6 +4,77 @@ from minineedle import needle
 import subprocess
 import csv
 
+def _parse_dot_bracket(dot_bracket):
+    """
+    Parse a dot-bracket notation and return a list of base pairs as (i, j) tuples.
+
+    Args:
+        dot_bracket (str): RNA structure in dot-bracket notation
+
+    Returns:
+        list: List of (i, j) tuples representing base pairs
+    """
+    pairs = []
+    stack = []
+
+    for i, char in enumerate(dot_bracket):
+        if char == "(":
+            stack.append(i)
+        elif char == ")":
+            if stack:
+                j = stack.pop()
+                pairs.append((j, i))
+
+    return pairs
+
+def _calculate_f1_score(pairs1, pairs2):
+    """
+    Calculate F1-score between two sets of base pairs.
+
+    Args:
+        pairs1 (list): List of (i, j) tuples from first structure
+        pairs2 (list): List of (i, j) tuples from second structure
+
+    Returns:
+        tuple: (precision, recall, f1_score)
+    """
+    pairs1_set = set(pairs1)
+    pairs2_set = set(pairs2)
+
+    true_positives = len(pairs1_set.intersection(pairs2_set))
+    false_positives = len(pairs2_set - pairs1_set)
+    false_negatives = len(pairs1_set - pairs2_set)
+
+    precision = (
+        true_positives / (true_positives + false_positives)
+        if (true_positives + false_positives) > 0
+        else 0
+    )
+    recall = (
+        true_positives / (true_positives + false_negatives)
+        if (true_positives + false_negatives) > 0
+        else 0
+    )
+
+    # F1-score can be calculated directly as: 2*TP / (2*TP + FP + FN)
+    f1_score = (
+        2 * true_positives / (2 * true_positives + false_positives + false_negatives)
+        if (2 * true_positives + false_positives + false_negatives) > 0
+        else 0
+    )
+
+    return precision, recall, f1_score
+
+def get_f1_score(str1, str2):
+    if len(str1) != len(str2):
+        return 'NA'
+    if str1 == 'no_structure' or str2 == 'no_structure':
+        return 'NA'    
+    pairs1 = _parse_dot_bracket(str1)
+    pairs2 = _parse_dot_bracket(str2)
+    precision, recall, f1_score = _calculate_f1_score(pairs1, pairs2)
+    return f1_score
+
 def get_needlewunsh_distance(seq1, seq2):
     if len(seq1) != len(seq2):
         return 'NA'
@@ -108,7 +179,8 @@ def read_dir(results, outdir, algodir):
                 results[algodir][ID] = (sequence, structure, rnafold, time, f'{outdir}/{algodir}/{fn}')
 
 
-POSSIBLE_ALGOS = {'desirna', 'rnainverse', 'rnaredprint', 'rnasfbinv', 'dss-opt', 'info-rna'}
+POSSIBLE_ALGOS = {'desirna', 'rnainverse', 'rnaredprint', 'rnasfbinv', 'dss-opt', 'info-rna',
+    'rnaredprint_designmultistate', 'rnaredprint_calcprobs', 'learna', 'metalearna', 'metalearnaadapt'}
 def main():
     if len(sys.argv) != 3:
         print('Usage: python3 read_and_calc_results.py algo_name dataset')
@@ -149,7 +221,7 @@ def main():
     f_o = open(f'{resdir}/results_{algo}.txt', 'w')
     f_o_ext = open(f'{resdir}/results_{algo}_extended.txt', 'w')
 
-    to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'res_rnafold', 'rnapdist', 'seqidentity', 'rnadistance', 'rnadistance2rnafold' ,'res_file', 'is_extended', 'time']
+    to_write = ['ID', 'algo', 'type', 'sequence', 'structure', 'res_sequence', 'res_structure', 'res_rnafold', 'rnapdist', 'seqidentity', 'rnadistance', 'rnadistance2rnafold' ,'res_file', 'is_extended', 'time', 'f1score', 'f1score2rnafold']
     print(';'.join(to_write), file=f_o)
     print(';'.join(to_write), file=f_o_ext)
 
@@ -184,12 +256,16 @@ def main():
             seqidentity = get_sequenceidentity_distance_1(og_seq, al_seq)
             rnadistance = get_rna_distance(og_str, al_str)
             rnadistance2rnafold = get_rna_distance(og_str, rnafold_str)
+            f1score = get_f1_score(og_str, al_str)
+            f1score2rnafold = get_f1_score(og_str, rnafold_str)
             print(f'Done for {ID} {algo}')
         else:
             rnapdist = 0
             seqidentity = 0
             rnadistance = 0
             rnadistance2rnafold = 0
+            f1score = 0
+            f1score2rnafold = 0
         
         if al_seq_ext not in ['TIMEOUTED', 'TIMEOUTED2', 'RTE']:
             print(f'Calc stats for {ID} {algo}_extended')
@@ -197,16 +273,20 @@ def main():
             seqidentity_ext = get_sequenceidentity_distance_1(og_seq_ext, al_seq_ext)
             rnadistance_ext = get_rna_distance(og_str_ext, al_str_ext)
             rnadistance2rnafold_ext = get_rna_distance(og_str_ext, rnafold_str_ext)
+            f1score_ext = get_f1_score(og_str_ext, al_str_ext)
+            f1score2rnafold_ext = get_f1_score(og_str_ext, rnafold_str_ext)
             print(f'Done for {ID} {algo}_extended')
         else:
             rnapdist_ext = 0
             seqidentity_ext = 0
             rnadistance_ext = 0
             rnadistance2rnafold_ext = 0
+            f1score_ext = 0
+            f1score2rnafold_ext = 0
 
-        to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnafold_str, rnapdist, seqidentity, rnadistance, rnadistance2rnafold, res_file, 0, time]
+        to_write = [ID, algo, typee, og_seq, og_str, al_seq, al_str, rnafold_str, rnapdist, seqidentity, rnadistance, rnadistance2rnafold, res_file, 0, time, f1score, f1score2rnafold]
         print(';'.join([str(x) for x in to_write]), file=f_o)
-        to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnafold_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, rnadistance2rnafold_ext, res_file_ext, 1, time_ext]
+        to_write = [ID, algo, typee, og_seq_ext, og_str_ext, al_seq_ext, al_str_ext, rnafold_str_ext, rnapdist_ext, seqidentity_ext, rnadistance_ext, rnadistance2rnafold_ext, res_file_ext, 1, time_ext, f1score_ext, f1score2rnafold_ext]
         print(';'.join([str(x) for x in to_write]), file=f_o_ext)
 
     csv_file.close()

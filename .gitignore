@@ -41,6 +41,7 @@ dockerhelpers_old/*
 test_*
 sbatch_*
 slurm_logs/*
+rna_design_prereview_res_and_plots/*
 
 run_tests.sh
 rna_design_plots.zip
