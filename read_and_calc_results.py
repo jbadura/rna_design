@@ -180,7 +180,8 @@ def read_dir(results, outdir, algodir):
 
 
 POSSIBLE_ALGOS = {'desirna', 'rnainverse', 'rnaredprint', 'rnasfbinv', 'dss-opt', 'info-rna',
-    'rnaredprint_designmultistate', 'rnaredprint_calcprobs', 'learna', 'metalearna', 'metalearnaadapt'}
+    'rnaredprint_designmultistate', 'rnaredprint_calcprobs', 'learna', 'metalearna', 'metalearnaadapt', 
+    'rnaredprint_calcprobs_mfe_only'}
 def main():
     if len(sys.argv) != 3:
         print('Usage: python3 read_and_calc_results.py algo_name dataset')

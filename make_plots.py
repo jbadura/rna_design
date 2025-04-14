@@ -10,14 +10,18 @@ plt.rcParams['figure.figsize'] = [8, 8]
 
 ALGO_NAMES = {'rnainverse': 'RNAinverse', 'info-rna': 'INFO-RNA', 'dss-opt': 'DSS-Opt',
               'rnasfbinv': 'RNAfbinv', 'rnaredprint': 'RNARedPrint', 'desirna': 'DesiRNA',
-              'algo': 'Algorithm'}
+              'algo': 'Algorithm', 'learna': 'LRNA', 'metalearna': 'MLRNA',
+              'metalearnaadapt': 'MLRNAA', 'rnaredprint_calcprobs': 'calcprobs_psum',
+              'rnaredprint_designmultistate': 'multistate', 'rnaredprint_calcprobs_mfe_only': 'calcprobs_mfe'}
 
-ALGOS = ['RNAinverse', 'RNAfbinv', 'INFO-RNA', 'RNARedPrint', 'DSS-Opt', 'DesiRNA']
-ALGO_ORDER = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint']
+ALGOS = ['RNAinverse', 'RNAfbinv', 'INFO-RNA', 'RNARedPrint', 'DSS-Opt', 'DesiRNA', 'LRNA', 'MLRNA', 'MLRNAA', 'calcprobs_psum', 'multistate', 'calcprobs_mfe']
+ALGO_ORDER = ['DesiRNA', 'RNAinverse', 'DSS-Opt', 'INFO-RNA', 'RNAfbinv', 'RNARedPrint', 'LRNA', 'MLRNA', 'MLRNAA', 'calcprobs_psum', 'multistate', 'calcprobs_mfe']
 
 
 MY_PAL = {'RNAinverse': 'g', 'RNAfbinv': 'b', 'INFO-RNA': 'm',
-          'RNARedPrint': 'r', 'DSS-Opt': 'y', 'DesiRNA': 'c'}
+          'RNARedPrint': 'r', 'DSS-Opt': 'y', 'DesiRNA': 'c', 
+          'LRNA': 'g', 'MLRNA': 'g', 'MLRNAA': 'g',
+          'calcprobs': 'g', 'multistate': 'g', 'calcprobs_mfe': 'g'}
 ##### END PLOT PARAMS #####
 
 def rename(main_dataset):
@@ -74,7 +78,7 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     # if not os.path.exists(f'plots_{main_dataset}/{dataset}/separated'):
     #     os.mkdir(f'plots_{main_dataset}/{dataset}/separated')
 
-    for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
+    for yax in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance', 'f1score2rnafold']:
         fig, ax = plt.subplots()
         sns.violinplot(data=df, y=yax, x="Algorithm", ax=ax, palette=MY_PAL, hue="Algorithm", legend=False, order=ALGO_ORDER)
         if yax != 'Sequence Identity':
@@ -93,7 +97,7 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
     stats = open(f'plots_{main_dataset}/{dataset}/{part}{suffix}.stats', 'w')
 
     line = ['Algorithm', '#solved', 'Tot. time', 'Avg. time']
-    for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
+    for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance', 'f1score2rnafold']:
         for tmp_name in ['Min', 'Max', 'Avg.', 'Median']:
             line.append(f'{stat} - {tmp_name}')
     print(*line, sep='\t', file=stats)
@@ -109,7 +113,7 @@ def draw_plots(df, dataset, part, is_extended, main_dataset):
             avg_time = tot_time / size
         line = [algo, size, f'{tot_time:.2f}', f'{avg_time:.2f}']
 
-        for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance']:
+        for stat in ['Sequence Identity', 'RNApdist', 'RNAdistance', 'Normalized RNAdistance', 'f1score2rnafold']:
             line.append(f'{pd.to_numeric(tmp_data[stat]).min():.2f}')
             line.append(f'{pd.to_numeric(tmp_data[stat]).max():.2f}')
             line.append(f'{pd.to_numeric(tmp_data[stat]).mean():.2f}')

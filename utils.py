@@ -262,3 +262,24 @@ def read_rnaredprint_calcprobs_one(outdir, file_name):
     structure = 'no_structure'
     f.close()
     return res_seq, structure
+    
+    
+def read_rnaredprint_calcprobs_one_mfe_only(outdir, file_name):
+    f = open(f'{outdir}/{file_name}', 'r')
+    res_seq = 'no_sequence'
+    res_mfe = 9999999999999999999999999999999999999999999999999
+    res_psum = -999999999999999999999999999999999999999999999999
+    for l in f:
+        l = l.strip().split()
+        if len(l) != 7 or not l[6].startswith('Psum') or not l[3].startswith('MFE'):
+            continue
+        
+        #psum = float(l[6].split('=')[1])
+        mfe = float(l[3].split('=')[1])
+        seq = l[0]
+        if res_mfe > mfe:
+            res_psum, res_mfe, res_seq = psum, mfe, seq
+            
+    structure = 'no_structure'
+    f.close()
+    return res_seq, structure

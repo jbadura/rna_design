@@ -193,6 +193,27 @@ def run_rnaredprint_calcprobs(indir, outdir, input_file_name, repeats=1):
         pass
 
 
+def run_rnaredprint_calcprobs_mfe_only(indir, outdir, input_file_name, repeats=1):
+    output_file_name_prefix = input_file_name.split('.')[0]
+
+    infile = open(f'{indir}/{input_file_name}', 'r')
+    struct = infile.readline().strip()
+    infile.close()
+
+    command = ['time', '/RNARedPrint/calcprobs-helper', struct]
+    status = utils.run_command(command, outdir, output_file_name_prefix)
+    if status != 'DONE':
+        return
+
+    if repeats == 1:
+        sequence, structure = utils.read_rnaredprint_calcprobs_one_mfe_only(outdir, f'{output_file_name_prefix}.out')
+        utils.run_rnafold([sequence], outdir, f'{output_file_name_prefix}.fold')
+        rnafold_sequence, rnafold_structure = utils.read_rnafold_one(outdir, f'{output_file_name_prefix}.fold.out')
+        utils.save_parsed_results(outdir, output_file_name_prefix, sequence, structure, rnafold_structure)
+    else:
+        # NOT IMPLEMENTED
+        pass
+
 def run_ribologic(indir, outdir, input_file_name, repeats=1):
     for test_num in range(repeats):
         ID = input_file_name.split('.')[0]
@@ -272,7 +293,8 @@ def run_metalearnaadapt(indir, outdir, input_file_name, repeats=1):
 ALGO = {'ribologic': run_ribologic, 'dss-opt': run_dss_opt, 'info-rna': run_info_rna,
         'rnainverse': run_rnainverse, 'rnaredprint': run_rnaredprint, 'rnasfbinv': run_rnasfbinv, 'desirna': run_desirna,
         'learna': run_learna, 'metalearna': run_metalearna, 'metalearnaadapt': run_metalearnaadapt,
-        'rnaredprint_designmultistate': run_rnaredprint_designmultistate, 'rnaredprint_calcprobs': run_rnaredprint_calcprobs}
+        'rnaredprint_designmultistate': run_rnaredprint_designmultistate, 'rnaredprint_calcprobs': run_rnaredprint_calcprobs,
+        'rnaredprint_calcprobs_mfe_only': run_rnaredprint_calcprobs_mfe_only}
 DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extended')],
         'dss-opt': [('rnainverse', 'dss-opt'), ('rnainverse_extended', 'dss-opt_extended')],
         'info-rna': [('rnainverse', 'info-rna'), ('rnainverse_extended', 'info-rna_extended')],
@@ -284,7 +306,8 @@ DIRS ={ 'desirna': [('desirna', 'desirna'), ('desirna_extended', 'desirna_extend
         'metalearna': [('learna', 'metalearna'), ('learna_extended', 'metalearna_extended')],
         'metalearnaadapt': [('learna', 'metalearnaadapt'), ('learna_extended', 'metalearnaadapt_extended')],
         'rnaredprint_designmultistate': [('rnainverse', 'rnaredprint_designmultistate'), ('rnainverse_extended', 'rnaredprint_designmultistate_extended')],
-        'rnaredprint_calcprobs': [('rnainverse', 'rnaredprint_calcprobs'), ('rnainverse_extended', 'rnaredprint_calcprobs_extended')]
+        'rnaredprint_calcprobs': [('rnainverse', 'rnaredprint_calcprobs'), ('rnainverse_extended', 'rnaredprint_calcprobs_extended')],
+        'rnaredprint_calcprobs_mfe_only': [('rnainverse', 'rnaredprint_calcprobs_mfe_only'), ('rnainverse_extended', 'rnaredprint_calcprobs_mfe_only_extended')]
 }
 
 def main():
