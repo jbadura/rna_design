@@ -278,7 +278,7 @@ def read_rnaredprint_calcprobs_one_mfe_only(outdir, file_name):
         mfe = float(l[3].split('=')[1])
         seq = l[0]
         if res_mfe > mfe:
-            res_psum, res_mfe, res_seq = psum, mfe, seq
+            res_mfe, res_seq = mfe, seq
             
     structure = 'no_structure'
     f.close()
